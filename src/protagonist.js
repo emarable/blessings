@@ -115,9 +115,9 @@ Protagonist.prototype.draw = function (ctx, cameraX, cameraY) {
   
   var tx = (Math.floor(this.x - cameraX) - 8) * 2;
   var ty = (Math.floor(this.y - cameraY) - 8) * 2;
-	ctx.drawImage(IMAGE.edward.get(), 
-    hFrame * 16, vFrame * 16, 16, 16, 
-    tx, ty, 32, 32);
+	// ctx.drawImage(IMAGE.edward.get(), 
+    // hFrame * 16, vFrame * 16, 16, 16, 
+    // tx, ty, 32, 32);
     
   ctx.fillStyle = "black";
 	ctx.fillText('('+this.x+','+this.y+')', tx, ty - 16);

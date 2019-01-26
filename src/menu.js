@@ -1,8 +1,7 @@
 var MainMenu = {
 	onEnter: function () {
-		this.buttonStart = new Button(16,176,"Start");
-		this.buttonLoad = new Button(16,224,"Load");
-		this.buttonEditor = new Button(16,272,"Level Editor");
+    this.background = IMAGE.bgTitle.get();
+		this.buttonStart = new Button(0.62,0.38,0.13,0.11);
 		    
     // if (!MUSIC.menu.get().isPlaying) {
       // MUSIC.stopAll();
@@ -23,37 +22,21 @@ var MainMenu = {
 	},
 	draw: function (ctx) {
 		// Clear the background
-    ctx.drawImage(IMAGE.bgTitle.get(), 0, 0);
+		ctx.drawImage(this.background, 0, 0, this.background.width, this.background.height,
+      0, 0, Game.WIDTH, Game.HEIGHT);
 		
 		this.buttonStart.draw(ctx);
-    this.buttonEditor.draw(ctx);
-    if (this.savedGame.level > 0) {
-      this.buttonLoad.draw(ctx);
-      ctx.fillStyle = 'white';
-      ctx.fillText('Level: '+(this.savedGame.level + 1), 160, 224);
-    }
 	},
 	mousemove: function (ev) {
-		var mx = ev.pageX - canvasX;
-		var my = ev.pageY - canvasY;
+		var mx = (ev.pageX - canvasX) / Game.WIDTH;
+		var my = (ev.pageY - canvasY) / Game.HEIGHT;
 		
 		this.buttonStart.mousemove(mx,my);
-		this.buttonLoad.mousemove(mx,my);
-		this.buttonEditor.mousemove(mx,my);
 	},
 	mouseup: function (ev) {
 		if (this.buttonStart.hover) {
-        Game.currentLevel = 0;
-        Game.setState(levels[Game.currentLevel]);
+			Game.currentLevel = 0;
+			Game.setState(levels[Game.currentLevel]);
 		}
-		if (this.buttonLoad.hover) {
-      if (this.savedGame.level > 0) {
-        Game.currentLevel = this.savedGame.level;
-        Game.setState(levels[Game.currentLevel]);
-      }
-		}
-    if (this.buttonEditor.hover) {
-        Game.setState(new Editor());
-    }
 	}
 };

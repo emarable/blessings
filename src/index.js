@@ -1,23 +1,11 @@
 var mainCanvas = null;
 var mainContext = null;
 
+var ASPECT_RATIO = 1.676;
+
 window.onload = function () {
 	Game.load();
 	Game.start();
-  
-  var muteButton = document.getElementById('audio_mute');
-  muteButton.addEventListener('click', function () {
-    if (!MUSIC.isMuted) {
-      MUSIC.mute();
-    } else {
-      MUSIC.unMute();
-    }
-    try {
-      localStorage.setItem('gad.monday.mute', MUSIC.isMuted.toString());
-    } catch (ex) {
-      console.error('Error saving mute state: ',ex);
-    }
-  });
 };
 
 var canvasX = 0;
@@ -58,10 +46,24 @@ var MUSIC = {
   }
 };
 
-window.onresize = function () {
+function updateViewport() {
 	canvasX = mainCanvas.offsetLeft;
 	canvasY = mainCanvas.offsetTop;
+  
+  var w = window.innerWidth;
+  var h = window.innerHeight;
+  if (w <= h * ASPECT_RATIO) {
+    mainCanvas.width = w;
+    mainCanvas.height = w / ASPECT_RATIO;
+  } else {
+    mainCanvas.width = h * ASPECT_RATIO;
+    mainCanvas.height = h;
+  }
+  
+  Game.WIDTH = mainCanvas.width;
+  Game.HEIGHT = mainCanvas.height;
 };
+window.onresize = updateViewport;
 
 var Game = {
 	WIDTH: 640,
@@ -77,12 +79,6 @@ var Game = {
     var audioContext = this.audioContext;
 		mainCanvas = document.getElementById('main_canvas');
 		mainContext = mainCanvas.getContext('2d');
-    
-    mainContext['imageSmoothingEnabled'] = false;       /* standard */
-    mainContext['mozImageSmoothingEnabled'] = false;    /* Firefox */
-    mainContext['oImageSmoothingEnabled'] = false;      /* Opera */
-    mainContext['webkitImageSmoothingEnabled'] = false; /* Safari */
-    mainContext['msImageSmoothingEnabled'] = false;     /* IE */
 		
 		function loadSprite (path) {
       return Game.loader.register(path, "blob", function (data, callback) {
@@ -96,10 +92,7 @@ var Game = {
       });
 		}
 		
-		IMAGE.splash = loadSprite('assets/bg_splash.png');
-    IMAGE.bgTitle = loadSprite('assets/bg_title.png');
-    IMAGE.edward = loadSprite('assets/sp_edward.png');
-    IMAGE.wallGrass = loadSprite('assets/sp_wall_grass.png');
+		IMAGE.bgTitle = loadSprite('assets/title.png');
 		
     MUSIC.gainNode = audioContext.createGain();
     MUSIC.gainNode.connect(audioContext.destination);
@@ -136,9 +129,11 @@ var Game = {
 		mainCanvas.addEventListener('mouseup',function (ev) { that.mouseup(ev); });
 		document.addEventListener('keydown',function (ev) { that.keydown(ev); });
 		document.addEventListener('keyup',function (ev) { that.keyup(ev); });
+    
+    updateViewport();
 	
-    var init = that.loader.require(IMAGE.splash);
-    init.onComplete = function () { that.setState(controllerIntro); };
+    var init = that.loader.require(IMAGE.bgTitle);
+    init.onComplete = function () { that.setState(MainMenu); };
 		this.setState(init);
 	
 		this.loop();
@@ -186,47 +181,3 @@ var Game = {
 		if (this.ui.keyup) { this.ui.keyup(ev); }
 	}
 };
-
-var controllerIntro = {
-	onEnter: function () {
-		this.t = 0;
-	},
-	step: function (elapsed) {
-		this.t += elapsed;
-		if (this.t >= 5000) {
-			this.nextState();
-		}
-	},
-	draw: function (ctx) {
-		var alpha = 0;
-		if (this.t < 1000) { alpha = this.t / 1000; }
-		else if (this.t < 4000) { alpha = 1; }
-		else if (this.t < 5000) { alpha = (5000 - this.t)/1000; }
-		
-		// Draw splash screen
-		ctx.drawImage(IMAGE.splash.get(), 0, 0);
-		
-		// Clear the background
-		ctx.globalAlpha = 1 - alpha;
-		ctx.beginPath();
-		ctx.fillStyle = 'black';
-		ctx.rect(0,0,Game.WIDTH,Game.HEIGHT);
-		ctx.fill();
-		ctx.globalAlpha = 1;
-	},
-	mouseup: function (ev) {
-		this.nextState();
-	},
-	keyup: function (ev) {
-		if (ev.keyCode === 13) {
-			this.nextState();
-		}
-	},
-  
-  nextState: function () {
-    // var init = Game.loader.require(MUSIC.menu);
-    var init = Game.loader.require(IMAGE.bgTitle);
-    init.onComplete = function () { Game.setState(MainMenu); };
-		Game.setState(init);
-  }
-}

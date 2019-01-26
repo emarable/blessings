@@ -93,6 +93,7 @@ var Game = {
 		}
 		
 		IMAGE.bgTitle = loadSprite('assets/title.png');
+		IMAGE.bgLevel1 = loadSprite('assets/Level_1.jpg');
 		
     MUSIC.gainNode = audioContext.createGain();
     MUSIC.gainNode.connect(audioContext.destination);

@@ -35,8 +35,12 @@ var MainMenu = {
 	},
 	mouseup: function (ev) {
 		if (this.buttonStart.hover) {
-			Game.currentLevel = 0;
-			Game.setState(levels[Game.currentLevel]);
+      var init = Game.loader.require(IMAGE.bgLevel1);
+      init.onComplete = function () { 
+        Game.currentLevel = 0;
+        Game.setState(levels[Game.currentLevel]); 
+      };
+      Game.setState(init);
 		}
 	}
 };

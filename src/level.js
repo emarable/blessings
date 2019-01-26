@@ -17,8 +17,8 @@ Level.prototype.onEnter = function () {
   // }
   
 	this.protagonist = new Protagonist();
-  this.protagonist.x = this.data.protagonist[0] * 16 + 8;
-  this.protagonist.y = this.data.protagonist[1] * 16 + 8;
+  this.protagonist.x = this.data.protagonist[0];
+  this.protagonist.y = this.data.protagonist[1];
   
   this.walls = [];
   for (var i = 0; i < this.data.walls.length; ++i) {
@@ -30,6 +30,9 @@ Level.prototype.onEnter = function () {
 Level.prototype.step = function (elapsed) {
 	if (this.isRunning) {
 		this.protagonist.step(elapsed);
+    
+    this.camera.x = Math.max(0,Math.min(this.data.width - this.camera.w, this.protagonist.x - this.camera.h / 2));
+    this.camera.y = Math.max(0,Math.min(this.data.height - this.camera.h, this.protagonist.y - this.camera.h / 2));
 	}
 };
 Level.prototype.draw = function (ctx) {
@@ -37,19 +40,12 @@ Level.prototype.draw = function (ctx) {
     this.camera.x, this.camera.y, this.camera.w, this.camera.h, 
     0, 0, Game.WIDTH, Game.HEIGHT);
   
-  var cameraX = Math.max(0,Math.min(this.data.width - 320, this.protagonist.x - 160));
-  var cameraY = Math.max(0,Math.min(this.data.height - 240, this.protagonist.y - 120));
-  
-  ctx.fillStyle = "black";
-	ctx.fillText('('+cameraX+','+cameraY+')', 0, 0);
-  
-  
   this.walls.forEach(function (wall) {
-    wall.draw(ctx, cameraX, cameraY);
+    wall.draw(ctx, this.camera.x, this.camera.y);
   });
   
 	//this.background.draw(ctx);
-	this.protagonist.draw(ctx, cameraX, cameraY);
+	this.protagonist.draw(ctx, this.camera);
 };
 Level.prototype.keydown = function (ev) {
 	this.protagonist.keydown(ev);
@@ -87,18 +83,11 @@ function checkCollision(obj1, obj2) {
 
 var levels = [];
 levels[0] = new Level({
-  width: 1000,
-  height: 480,
+  width: 1200,
+  height: 2000,
   background: 'bgLevel1',
-  walls: [
-    [0,0,0], [0,1,0], [0,2,0], [0,3,0], [0,4,0], [0,5,0], [0,6,0], [0,7,0],
-    [0,8,0], [0,9,0], [0,10,0], [0,11,0], [0,12,0], [0,13,0], [0,14,0], [0,15,0],
-    [0,16,0], [0,17,0], [0,18,0], [0,19,0], [0,20,0], [0,21,0], [0,22,0], [0,23,0],
-    [0,24,0], [0,25,0], [0,26,0], [0,27,0], 
-    [0,28,1], [1,28,1], [2,28,1], [3,28,1], [4,28,1], [5,28,1], [6,28,1], [7,28,1], 
-    [0,29,1], [1,29,1], [2,29,1], [3,29,1], [4,29,1], [5,29,1], [6,29,1], [7,29,1],
-  ],
-  protagonist: [1,27],
+  walls: [],
+  protagonist: [100,0],
 });
 
 function Wall(data) {

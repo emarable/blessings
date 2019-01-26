@@ -7,10 +7,10 @@ function Protagonist() {
   this.hSpeed = 0;
   this.vSpeed = 0;
 	this.mask = {
-		left: -8,
-		top: -8,
-		right: 8,
-		bottom: 8
+		left: -30,
+		top: -40,
+		right: 30,
+		bottom: 40
 	};
 	this.keys = {
 		left: false,
@@ -50,19 +50,23 @@ Protagonist.prototype.step = function (elapsed) {
       else { this.hSpeed = 0; this.state = "standing"; }
     }
     
-    var wallDown = Game.ui.pointCollide(this.x,this.y+8,Game.ui.walls);
-    var wallLeft = Game.ui.pointCollide(this.x - 8,this.y,Game.ui.walls);
-    var wallRight = Game.ui.pointCollide(this.x + 8,this.y,Game.ui.walls);
-    var wallUp = Game.ui.pointCollide(this.x,this.y-8,Game.ui.walls);
+    var wallDown = Game.ui.pointCollide(this.x,this.y+this.mask.bottom,Game.ui.walls);
+    var wallLeft = Game.ui.pointCollide(this.x + this.mask.left,this.y,Game.ui.walls);
+    var wallRight = Game.ui.pointCollide(this.x + this.mask.right,this.y,Game.ui.walls);
+    var wallUp = Game.ui.pointCollide(this.x,this.y+this.mask.top,Game.ui.walls);
+    
+    if (this.y >= Game.ui.data.height - this.mask.bottom) {
+      wallDown = {y: Game.ui.data.height}
+    }
     
     if (wallDown) {
-      this.y = wallDown.y - 16;
+      this.y = wallDown.y - this.mask.bottom;
       this.vSpeed = Math.min(this.vSpeed,0);
       if (this.vSpeed >= 0) { this.jump = 8; }
     } else {
       //wallDown = collision_line(x,y+8,x,yprevious+8,OB_Wall,false,true);
       if (wallDown) {
-        this.y = wallDown.y - 16;
+        this.y = wallDown.y - this.mask.bottom;
         this.vSpeed = Math.min(this.vSpeed,0);
         if (this.vSpeed >= 0) { this.jump = 8; }
       }
@@ -71,15 +75,15 @@ Protagonist.prototype.step = function (elapsed) {
       this.vSpeed += this.acceleration;
     }
     if (wallLeft) {
-      this.x = wallLeft.x + 16;
+      this.x = wallLeft.x - this.mask.left;
       this.hSpeed = Math.max(this.hSpeed,0);
     }
     if (wallRight) {
-      this.x = wallRight.x - 16;
+      this.x = wallRight.x - this.mask.right;
       this.hSpeed = Math.min(this.hSpeed,0);
     }
     if (wallUp) {
-      this.y = wallUp.y + 16;
+      this.y = wallUp.y - this.mask.top;
       this.vSpeed = Math.max(this.vSpeed,0);
     }
    
@@ -92,7 +96,7 @@ Protagonist.prototype.step = function (elapsed) {
     }
 	}
 }
-Protagonist.prototype.draw = function (ctx, cameraX, cameraY) {
+Protagonist.prototype.draw = function (ctx, camera) {
 	// Character
   var hFrame = 0;
   if (this.state === "standing") {
@@ -113,8 +117,13 @@ Protagonist.prototype.draw = function (ctx, cameraX, cameraY) {
   }
   var vFrame = (this.facing === 1 ? 0 : 1);
   
-  var tx = (Math.floor(this.x - cameraX) - 8) * 2;
-  var ty = (Math.floor(this.y - cameraY) - 8) * 2;
+  var tx = (Math.floor(this.x - camera.x) + this.mask.left) / camera.w * Game.WIDTH;
+  var ty = (Math.floor(this.y - camera.y) + this.mask.top) / camera.h * Game.HEIGHT;
+  
+  ctx.beginPath();
+  ctx.filStyle = 'black';
+  ctx.rect(tx, ty, (this.mask.right - this.mask.left) / camera.w * Game.WIDTH, (this.mask.bottom - this.mask.top) / camera.h * Game.HEIGHT);
+  ctx.fill();
 	// ctx.drawImage(IMAGE.edward.get(), 
     // hFrame * 16, vFrame * 16, 16, 16, 
     // tx, ty, 32, 32);

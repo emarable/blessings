@@ -121,6 +121,10 @@ var Game = {
     IMAGE.squirrel = loadSprite('assets/Squirrel.png');
     IMAGE.speech = loadSprite('assets/Speech.png');
     
+    IMAGE.bgLevel2 = loadSprite('assets/level2/COMPOSITE.jpg');
+    IMAGE.bgLevel3 = loadSprite('assets/level3/COMPOSITE.jpg');
+    IMAGE.bgLevel4 = loadSprite('assets/level4/COMPOSITE.jpg');
+    
     IMAGE.protagonistIdle1Left = loadSprite('assets/character/Still1.png');
     IMAGE.protagonistIdle2Left = loadSprite('assets/character/Still2.png');
     IMAGE.protagonistIdle3Left = loadSprite('assets/character/Still3.png');
@@ -161,6 +165,9 @@ var Game = {
     MUSIC.defaultLoop = true;
     MUSIC.title = loadAudio(MUSIC,'assets/music/Decline (Title).mp3');
     MUSIC.level1 = loadAudio(MUSIC,'assets/music/Clear Air (Forests).mp3');
+    MUSIC.level2 = loadAudio(MUSIC,'assets/music/Bittersweet (Trees).mp3');
+    MUSIC.level4 = loadAudio(MUSIC,'assets/music/Ascending the Vale (Cliffside).mp3');
+    MUSIC.ending = loadAudio(MUSIC,'assets/music/Floating Cities (Clouds).mp3');
     
     SOUND = new AudioChannel(audioContext);
     SOUND.start = loadAudio(SOUND,'assets/sfx/start button.wav');

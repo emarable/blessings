@@ -49,7 +49,9 @@ var MainMenu = {
         IMAGE.protagonistIdle1Right,
         IMAGE.protagonistIdle2Right,
         IMAGE.protagonistIdle3Right,
-        MUSIC.level1
+        MUSIC.level1,
+        SOUND.water,
+        SOUND.landing,
       );
       init.onComplete = function () { 
         Game.currentLevel = 0;

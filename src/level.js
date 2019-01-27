@@ -13,27 +13,33 @@ Level.prototype.onEnter = function () {
     h: 800 / ASPECT_RATIO,
   };
      
-    if (!MUSIC.level1.get().isPlaying) {
-      MUSIC.stopAll();
-      MUSIC.play(MUSIC.level1.get());
-    }
+  if (!MUSIC.level1.get().isPlaying) {
+    MUSIC.stopAll();
+    MUSIC.play(MUSIC.level1.get());
+  }
   
 	this.protagonist = new Protagonist();
   this.protagonist.x = this.data.protagonist[0];
   this.protagonist.y = this.data.protagonist[1];
   
   var level = this;
-  function initBoxes(data, name) {
+  function initObjects(constructor, name) {
     level[name] = [];
-    for (var i = 0; i < data[name].length; ++i) {
-      level[name].push(new StaticBox(data[name][i]));
+    for (var i = 0; i < level.data[name].length; ++i) {
+      level[name].push(
+        new (Function.prototype.bind.apply(
+          constructor, [constructor, level.data[name][i]]
+        ))
+      );
     }
   }
   
-  initBoxes(this.data, 'walls');
-  initBoxes(this.data, 'platforms');
-  initBoxes(this.data, 'waters');
-  initBoxes(this.data, 'climbs');
+  initObjects(StaticBox, 'walls');
+  initObjects(StaticBox, 'platforms');
+  initObjects(StaticBox, 'waters');
+  initObjects(StaticBox, 'climbs');
+  initObjects(StaticBox, 'cutscenes');
+  initObjects(Doodad, 'doodads');
   
   this.dynamic = [];
   for (var i = 0; i < this.data.dynamic.length; ++i) {
@@ -47,6 +53,7 @@ Level.prototype.onEnter = function () {
   	
 	this.isRunning = true;
   this.isComplete = false;
+  this.activeCutscene = null;
   this.delay = 0;
 };
 Level.prototype.step = function (elapsed) {
@@ -60,6 +67,9 @@ Level.prototype.step = function (elapsed) {
     this.camera.x = Math.max(0,Math.min(this.data.width - this.camera.w, this.protagonist.x - this.camera.h / 2));
     this.camera.y = Math.max(0,Math.min(this.data.height - this.camera.h, this.protagonist.y - this.camera.h / 2));
 	}
+  if (this.activeCutscene) {
+    this.activeCutscene.step(elapsed);
+  }
   if (this.isComplete) {
     this.delay += 1;
     if (this.delay > 300) {
@@ -74,6 +84,10 @@ Level.prototype.draw = function (ctx) {
   
 	this.protagonist.draw(ctx, this.camera);
     
+  for (var i = 0; i < this.doodads.length; ++i) {
+    this.doodads[i].draw(ctx, this.camera);
+  }
+  
   ctx.drawImage(this.foreground, 
     this.camera.x, this.camera.y, this.camera.w, this.camera.h, 
     0, 0, Game.WIDTH, Game.HEIGHT);
@@ -89,12 +103,17 @@ Level.prototype.draw = function (ctx) {
   ctx.globalCompositeOperation = 'source-over';
   
   var camera = this.camera;
-  // this.walls.concat(this.platforms)
-    // .concat(this.waters)
-    // .concat(this.climbs)
-    // .forEach(function (w) {
-      // w.draw(ctx,camera);
-    // });
+  this.walls.concat(this.platforms)
+    .concat(this.waters)
+    .concat(this.climbs)
+    .concat(this.cutscenes)
+    .forEach(function (w) {
+      w.draw(ctx,camera);
+    });
+    
+  if (this.activeCutscene) {
+    this.activeCutscene.draw(ctx, camera);
+  }
     
   if (this.isComplete && this.delay > 60) {
     ctx.globalAlpha = (this.delay - 60) / 240;
@@ -107,9 +126,15 @@ Level.prototype.draw = function (ctx) {
 };
 Level.prototype.keydown = function (ev) {
 	this.protagonist.keydown(ev);
+  if (this.activeCutscene) {
+    this.activeCutscene.keydown(ev);
+  }
 };
 Level.prototype.keyup = function (ev) {
 	this.protagonist.keyup(ev);
+  if (this.activeCutscene) {
+    this.activeCutscene.keyup(ev);
+  }
 };
 
 Level.prototype.pointCollide = function (x, y, filter) {
@@ -135,6 +160,15 @@ Level.prototype.boxCollide = function (left, top, right, bottom, filter) {
 Level.prototype.complete = function () {
   this.isComplete = true;
   this.delay = 0;
+};
+Level.prototype.cutscene = function (trigger) {
+  this.activeCutscene = cutscenes[trigger.data.cutscene];
+  this.activeCutscene.start();
+  this.cutscenes.splice(this.cutscenes.indexOf(trigger));
+};
+Level.prototype.endCutscene = function () {
+  this.activeCutscene = null;
+  this.protagonist.control = true;
 };
 
 var levels = [];
@@ -184,6 +218,12 @@ levels[0] = new Level({
     [BigLeaf,'leaf1Level1',250,700,100,10,220,40],
     [BigLeaf,'leaf2Level1',578,305,62,235,160,40],
   ],
+  doodads: [
+    ['squirrel',300,1700],
+  ],
+  cutscenes: [
+    [200,1600,10, 300, {cutscene: 0}],
+  ],
   protagonist: [100,1800],
   //protagonist: [440,200],
 });
@@ -197,6 +237,7 @@ function StaticBox(data) {
     right: data[2],
     bottom: data[3],
   };
+  this.data = data[4];
 }
 StaticBox.prototype.draw = function (ctx, camera) {
   var tx = (Math.floor(this.x - camera.x) + this.mask.left) / camera.w * Game.WIDTH;
@@ -210,6 +251,22 @@ StaticBox.prototype.draw = function (ctx, camera) {
   ctx.globalAlpha = 0.2;
   ctx.fill();
   ctx.globalAlpha = 1;
+}
+
+function Doodad(data) {
+  this.image = IMAGE[data[0]].get();
+  this.x = data[1];
+  this.y = data[2];
+}
+Doodad.prototype.draw = function (ctx, camera) {
+  var tx = (this.x-camera.x) / camera.w * Game.WIDTH;
+  var ty = (this.y-camera.y) / camera.h * Game.HEIGHT;
+  var tw = this.image.width / camera.w * Game.WIDTH;
+  var th = this.image.height / camera.h * Game.HEIGHT;
+  
+  ctx.drawImage(this.image, 
+    0, 0, this.image.width, this.image.height, 
+    tx, ty, tw, th);
 }
 
 function BigLeaf(data) {

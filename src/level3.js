@@ -7,6 +7,7 @@ levels[2] = new Level({
   music: 'level3',
   nextState: function () { return showcases[0].init(); },
   walls: [
+    [0,2895,1200,200],
   ],
   platforms: [
   ],

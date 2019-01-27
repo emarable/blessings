@@ -54,6 +54,15 @@ var MainMenu = {
         IMAGE.ltLevel1,
         IMAGE.leaf1Level1,
         IMAGE.leaf2Level1,
+        IMAGE.bgLevel2,
+        IMAGE.fgLevel2,
+        IMAGE.ltLevel2,
+        IMAGE.bgLevel3,
+        IMAGE.fgLevel3,
+        IMAGE.ltLevel3,
+        IMAGE.bgLevel4,
+        IMAGE.fgLevel4,
+        IMAGE.ltLevel4,
         IMAGE.squirrel,
         IMAGE.speech,
         IMAGE.protagonistIdle1Left,
@@ -79,12 +88,15 @@ var MainMenu = {
         IMAGE.protagonistFall1Right,
         IMAGE.protagonistFall2Right,
         MUSIC.level1,
+        MUSIC.level2,
+        MUSIC.level4,
+        MUSIC.ending,
         SOUND.water,
         SOUND.landing,
         SOUND.dialogue,
       );
       init.onComplete = function () { 
-        Game.currentLevel = 1;
+        Game.currentLevel = 3;
         Game.setState(levels[Game.currentLevel]); 
         // Game.setState(showcases[1].init());
         // Game.setState(Ending.init());

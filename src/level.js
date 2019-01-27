@@ -5,6 +5,7 @@ Level.prototype.onEnter = function () {
   this.background = IMAGE[this.data.background].get();
   this.foreground = IMAGE[this.data.foreground].get();
   this.lighting = IMAGE[this.data.lighting].get();
+  this.music = MUSIC[this.data.music].get();
   
   this.camera = {
     x: 0,
@@ -13,9 +14,9 @@ Level.prototype.onEnter = function () {
     h: 800 / ASPECT_RATIO,
   };
      
-  if (!MUSIC.level1.get().isPlaying) {
+  if (!this.music.isPlaying) {
     MUSIC.stopAll();
-    MUSIC.play(MUSIC.level1.get());
+    MUSIC.play(this.music);
   }
   
 	this.protagonist = new Protagonist();
@@ -65,7 +66,7 @@ Level.prototype.step = function (elapsed) {
       this.dynamic[i].step(elapsed);
     }
     
-    this.camera.x = Math.max(0,Math.min(this.data.width - this.camera.w, this.protagonist.x - this.camera.h / 2));
+    this.camera.x = Math.max(0,Math.min(this.data.width - this.camera.w, this.protagonist.x - this.camera.w / 2));
     this.camera.y = Math.max(0,Math.min(this.data.height - this.camera.h, this.protagonist.y - this.camera.h / 2));
 	}
   if (this.activeCutscene) {

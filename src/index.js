@@ -119,6 +119,7 @@ var Game = {
     IMAGE.leaf1Level1 = loadSprite('assets/level1/BIG_LEAF_1.png');
     IMAGE.leaf2Level1 = loadSprite('assets/level1/BIG_LEAF_2.png');
     IMAGE.squirrel = loadSprite('assets/Squirrel.png');
+    IMAGE.ocelot = loadSprite('assets/ocelot.png');
     IMAGE.speech = loadSprite('assets/Speech.png');
     
     IMAGE.bgLevel2 = loadSprite('assets/level2/COMPOSITE.jpg');

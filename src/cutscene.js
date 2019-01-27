@@ -1,6 +1,6 @@
 var breakpoints = [
 {
-  at: 640,
+  at: 740,
   fontSize: 16,
   marginHorizontal: 20,
   marginVertical: 20,
@@ -118,7 +118,8 @@ cutscenes[0] = new Cutscene({
   x: 0.4,
   y: 0.1,
   texts: [
-    "I am a squirrel",
-    "Jack will fill this in later",
+    "Welcome back!",
+    "There's a nice breeze today.",
+    "Be careful on the way up!",
   ]
 });

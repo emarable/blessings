@@ -3,6 +3,9 @@ function Showcase(data) {
 }
 Showcase.prototype.onEnter = function () {  
   this.background = IMAGE[this.data.background].get();
+  if (this.data.foreground) {
+    this.foreground = IMAGE[this.data.foreground].get();
+  }
   this.music = MUSIC[this.data.music].get();
   
   this.camera = {
@@ -65,6 +68,12 @@ Showcase.prototype.draw = function (ctx) {
   ctx.drawImage(this.background, 
     this.camera.x, this.camera.y, this.camera.w, this.camera.h, 
     0, 0, Game.WIDTH, Game.HEIGHT);
+    
+  if (this.foreground) {
+    ctx.drawImage(this.foreground, 
+      this.camera.x, this.camera.y, this.camera.w, this.camera.h, 
+      0, 0, Game.WIDTH, Game.HEIGHT);
+  }
       
   if (this.isComplete) {
     ctx.globalAlpha = this.delay / 60;
@@ -106,10 +115,12 @@ showcases[1] = new Showcase({
   width: 1200,
   height: 3000,
   background: 'bgLevel3',
+  foreground: 'ocelot',
   music: 'level2',
   init: function () {
     var init = Game.loader.require(
       IMAGE.bgLevel3,
+      IMAGE.ocelot,
       MUSIC.level2,
     );
     init.onComplete = function () { Game.setState(showcases[1]); };
@@ -130,5 +141,5 @@ showcases[2] = new Showcase({
     init.onComplete = function () { Game.setState(showcases[2]); };
     return init;
   },
-  nextState: function () { return MainMenu; }
+  nextState: function () { return Ending; }
 });

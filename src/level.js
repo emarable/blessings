@@ -103,13 +103,13 @@ Level.prototype.draw = function (ctx) {
   ctx.globalCompositeOperation = 'source-over';
   
   var camera = this.camera;
-  this.walls.concat(this.platforms)
-    .concat(this.waters)
-    .concat(this.climbs)
-    .concat(this.cutscenes)
-    .forEach(function (w) {
-      w.draw(ctx,camera);
-    });
+  // this.walls.concat(this.platforms)
+    // .concat(this.waters)
+    // .concat(this.climbs)
+    // .concat(this.cutscenes)
+    // .forEach(function (w) {
+      // w.draw(ctx,camera);
+    // });
     
   if (this.activeCutscene) {
     this.activeCutscene.draw(ctx, camera);
@@ -219,7 +219,7 @@ levels[0] = new Level({
     [BigLeaf,'leaf2Level1',578,305,62,235,160,40],
   ],
   doodads: [
-    ['squirrel',300,1700],
+    ['squirrel',240,1600,0.3],
   ],
   cutscenes: [
     [200,1600,10, 300, {cutscene: 0}],
@@ -257,12 +257,13 @@ function Doodad(data) {
   this.image = IMAGE[data[0]].get();
   this.x = data[1];
   this.y = data[2];
+  this.scale = data[3];
 }
 Doodad.prototype.draw = function (ctx, camera) {
   var tx = (this.x-camera.x) / camera.w * Game.WIDTH;
   var ty = (this.y-camera.y) / camera.h * Game.HEIGHT;
-  var tw = this.image.width / camera.w * Game.WIDTH;
-  var th = this.image.height / camera.h * Game.HEIGHT;
+  var tw = this.image.width / camera.w * Game.WIDTH * this.scale;
+  var th = this.image.height / camera.h * Game.HEIGHT * this.scale;
   
   ctx.drawImage(this.image, 
     0, 0, this.image.width, this.image.height, 

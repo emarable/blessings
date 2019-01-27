@@ -43,6 +43,8 @@ var MainMenu = {
         IMAGE.ltLevel1,
         IMAGE.leaf1Level1,
         IMAGE.leaf2Level1,
+        IMAGE.squirrel,
+        IMAGE.speech,
         IMAGE.protagonistIdle1Left,
         IMAGE.protagonistIdle2Left,
         IMAGE.protagonistIdle3Left,

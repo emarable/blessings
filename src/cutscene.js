@@ -1,4 +1,5 @@
-var font = '30px serif';
+var fontSize = 40;
+var font = 'bold ' +fontSize + 'px sans-serif';
 
 function Cutscene(data) {
   this.x = data.x;
@@ -7,6 +8,8 @@ function Cutscene(data) {
   this.currentText = 0;
   this.scroll = 0;
   
+  this.marginH = 32;
+  this.marginV = 96;
   this.textSpeed = 5;
   this.textFade = 60;
   this.textBounce = 2;
@@ -27,18 +30,28 @@ Cutscene.prototype.draw = function (ctx, camera) {
   
   var textSize = ctx.measureText(text);
   
-  ctx.beginPath();
-  ctx.rect(tx,ty,textSize.width + 40,46);
-  ctx.fill();
+  // ctx.beginPath();
+  // ctx.rect(tx,ty,textSize.width + 40,46);
+  // ctx.fill();
   
-  ctx.fillStyle = 'black';
+  ctx.drawImage(this.speechImage, 
+    tx, ty, textSize.width + this.marginH * 2, fontSize + this.marginV * 2);
+  
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = 'black';
+  ctx.fillStyle = 'white';
   for (var i = 0; i < text.length; ++i) {
     if (this.scroll < i * this.textSpeed) break;
     
     var bounce = Math.sin(-(this.scroll + i * this.textSpeed) * Math.PI/60) * this.textBounce;
     
     ctx.globalAlpha = Math.min(1, (this.scroll - i * this.textSpeed) / this.textFade);
-    ctx.fillText(text[i], tx + 8 + ctx.measureText(text.slice(0,i)).width, ty + 8 + bounce);
+    ctx.fillText(text[i], 
+      tx + this.marginH + ctx.measureText(text.slice(0,i)).width, 
+      ty + this.marginV + bounce);
+    ctx.strokeText(text[i], 
+      tx + this.marginH + ctx.measureText(text.slice(0,i)).width, 
+      ty + this.marginV + bounce);
   }
   
   ctx.globalAlpha = 1;
@@ -61,12 +74,13 @@ Cutscene.prototype.start = function () {
   this.y = this.data.y;
   this.currentText = 0;
   this.scroll = 0;
+  this.speechImage = IMAGE.speech.get();
 };
 
 var cutscenes = [];
 cutscenes[0] = new Cutscene({
   x: 0.4,
-  y: 0.1,
+  y: 0,
   texts: [
     "I am a squirrel",
     "Jack will fill this in later",

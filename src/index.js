@@ -114,39 +114,39 @@ var Game = {
 		}
 		
 		IMAGE.bgTitle = loadSprite('assets/Menu.jpg');
-		IMAGE.bgLevel1 = loadSprite('assets/Level_1_MAIN.jpg');
-		IMAGE.fgLevel1 = loadSprite('assets/Level_1_FORE.png');
-		IMAGE.ltLevel1 = loadSprite('assets/Level_1_LIGHTING.png');
-    IMAGE.leaf1Level1 = loadSprite('assets/Level_1_BIG_LEAF_1.png');
-    IMAGE.leaf2Level1 = loadSprite('assets/Level_1_BIG_LEAF_2.png');
+		IMAGE.bgLevel1 = loadSprite('assets/level1/MAIN.jpg');
+		IMAGE.fgLevel1 = loadSprite('assets/level1/FORE.png');
+		IMAGE.ltLevel1 = loadSprite('assets/level1/LIGHTING.png');
+    IMAGE.leaf1Level1 = loadSprite('assets/level1/BIG_LEAF_1.png');
+    IMAGE.leaf2Level1 = loadSprite('assets/level1/BIG_LEAF_2.png');
     IMAGE.squirrel = loadSprite('assets/Squirrel.png');
     IMAGE.speech = loadSprite('assets/Speech.png');
     
-    IMAGE.protagonistIdle1Left = loadSprite('assets/Still1.png');
-    IMAGE.protagonistIdle2Left = loadSprite('assets/Still2.png');
-    IMAGE.protagonistIdle3Left = loadSprite('assets/Still3.png');
-    IMAGE.protagonistIdle1Right = loadSprite('assets/Still1R.png');
-    IMAGE.protagonistIdle2Right = loadSprite('assets/Still2R.png');
-    IMAGE.protagonistIdle3Right = loadSprite('assets/Still3R.png');
+    IMAGE.protagonistIdle1Left = loadSprite('assets/character/Still1.png');
+    IMAGE.protagonistIdle2Left = loadSprite('assets/character/Still2.png');
+    IMAGE.protagonistIdle3Left = loadSprite('assets/character/Still3.png');
+    IMAGE.protagonistIdle1Right = loadSprite('assets/character/Still1R.png');
+    IMAGE.protagonistIdle2Right = loadSprite('assets/character/Still2R.png');
+    IMAGE.protagonistIdle3Right = loadSprite('assets/character/Still3R.png');
         
-    IMAGE.protagonistMove1Left = loadSprite('assets/Move1.png');
-    IMAGE.protagonistMove2Left = loadSprite('assets/Move2.png');
-    IMAGE.protagonistMove3Left = loadSprite('assets/Move3.png');
-    IMAGE.protagonistMove4Left = loadSprite('assets/Move4.png');
-    IMAGE.protagonistMove1Right = loadSprite('assets/Move1R.png');
-    IMAGE.protagonistMove2Right = loadSprite('assets/Move2R.png');
-    IMAGE.protagonistMove3Right = loadSprite('assets/Move3R.png');
-    IMAGE.protagonistMove4Right = loadSprite('assets/Move4R.png');
+    IMAGE.protagonistMove1Left = loadSprite('assets/character/Move1.png');
+    IMAGE.protagonistMove2Left = loadSprite('assets/character/Move2.png');
+    IMAGE.protagonistMove3Left = loadSprite('assets/character/Move3.png');
+    IMAGE.protagonistMove4Left = loadSprite('assets/character/Move4.png');
+    IMAGE.protagonistMove1Right = loadSprite('assets/character/Move1R.png');
+    IMAGE.protagonistMove2Right = loadSprite('assets/character/Move2R.png');
+    IMAGE.protagonistMove3Right = loadSprite('assets/character/Move3R.png');
+    IMAGE.protagonistMove4Right = loadSprite('assets/character/Move4R.png');
         
-    IMAGE.protagonistRise1Left = loadSprite('assets/Rise1.png');
-    IMAGE.protagonistRise2Left = loadSprite('assets/Rise2.png');
-    IMAGE.protagonistRise1Right = loadSprite('assets/Rise1R.png');
-    IMAGE.protagonistRise2Right = loadSprite('assets/Rise2R.png');
+    IMAGE.protagonistRise1Left = loadSprite('assets/character/Rise1.png');
+    IMAGE.protagonistRise2Left = loadSprite('assets/character/Rise2.png');
+    IMAGE.protagonistRise1Right = loadSprite('assets/character/Rise1R.png');
+    IMAGE.protagonistRise2Right = loadSprite('assets/character/Rise2R.png');
         
-    IMAGE.protagonistFall1Left = loadSprite('assets/Fall1.png');
-    IMAGE.protagonistFall2Left = loadSprite('assets/Fall2.png');
-    IMAGE.protagonistFall1Right = loadSprite('assets/Fall1R.png');
-    IMAGE.protagonistFall2Right = loadSprite('assets/Fall2R.png');
+    IMAGE.protagonistFall1Left = loadSprite('assets/character/Fall1.png');
+    IMAGE.protagonistFall2Left = loadSprite('assets/character/Fall2.png');
+    IMAGE.protagonistFall1Right = loadSprite('assets/character/Fall1R.png');
+    IMAGE.protagonistFall2Right = loadSprite('assets/character/Fall2R.png');
 		
     function loadAudio (channel, path) {
       return Game.loader.register(path, "arraybuffer", function (data, callback) {
@@ -160,14 +160,14 @@ var Game = {
     
     MUSIC = new AudioChannel(audioContext);
     MUSIC.defaultLoop = true;
-    MUSIC.title = loadAudio(MUSIC,'assets/Decline (Title).mp3');
-    MUSIC.level1 = loadAudio(MUSIC,'assets/Clear Air (Forests).mp3');
+    MUSIC.title = loadAudio(MUSIC,'assets/music/Decline (Title).mp3');
+    MUSIC.level1 = loadAudio(MUSIC,'assets/music/Clear Air (Forests).mp3');
     
     SOUND = new AudioChannel(audioContext);
-    SOUND.start = loadAudio(SOUND,'assets/start button.wav');
-    SOUND.water = loadAudio(SOUND,'assets/water.wav');
-    SOUND.landing = loadAudio(SOUND,'assets/landing.wav');
-    SOUND.dialogue = loadAudio(SOUND,'assets/dialogue.wav');
+    SOUND.start = loadAudio(SOUND,'assets/sfx/start button.wav');
+    SOUND.water = loadAudio(SOUND,'assets/sfx/water.wav');
+    SOUND.landing = loadAudio(SOUND,'assets/sfx/landing.wav');
+    SOUND.dialogue = loadAudio(SOUND,'assets/sfx/dialogue.wav');
     
 		window.onresize();
 	},

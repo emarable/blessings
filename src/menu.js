@@ -84,7 +84,7 @@ var MainMenu = {
         SOUND.dialogue,
       );
       init.onComplete = function () { 
-        Game.currentLevel = 0;
+        Game.currentLevel = 1;
         Game.setState(levels[Game.currentLevel]); 
         // Game.setState(showcases[1].init());
         // Game.setState(Ending.init());

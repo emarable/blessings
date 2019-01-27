@@ -117,13 +117,13 @@ Level.prototype.draw = function (ctx) {
   ctx.globalCompositeOperation = 'source-over';
   
   var camera = this.camera;
-  // this.walls.concat(this.platforms)
-    // .concat(this.waters)
-    // .concat(this.climbs)
-    // .concat(this.cutscenes)
-    // .forEach(function (w) {
-      // w.draw(ctx,camera);
-    // });
+   this.walls.concat(this.platforms)
+     .concat(this.waters)
+     .concat(this.climbs)
+     .concat(this.cutscenes)
+     .forEach(function (w) {
+       w.draw(ctx,camera);
+     });
     
   if (this.activeCutscene) {
     this.activeCutscene.draw(ctx, camera);

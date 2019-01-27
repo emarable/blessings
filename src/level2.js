@@ -9,6 +9,7 @@ levels[1] = new Level({
   walls: [
   ],
   platforms: [
+      [0,2830,790,10]
   ],
   waters: [
   ],

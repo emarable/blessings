@@ -18,7 +18,9 @@ function AudioChannel (context) {
   
   this.gainNode = this.audioContext.createGain();
   this.gainNode.connect(this.audioContext.destination);
-  this.gainNode.gain.value = 0;
+  this.gainNode.gain.value = 1;
+  
+  this.globalVolume = 0;
   
   this.__buffers = [];
 }
@@ -27,7 +29,7 @@ AudioChannel.prototype.play = function (audioObject) {
     var source = this.audioContext.createBufferSource();
     source.buffer = audioObject.buffer;
     source.connect(this.gainNode);
-    source.connect(this.audioContext.destination);
+    //source.connect(this.audioContext.destination);
     source.loop = this.defaultLoop;
     source.start();
     source.onended = function () {
@@ -56,6 +58,10 @@ AudioChannel.prototype.mute = function () {
 AudioChannel.prototype.unMute = function () {
     this.gainNode.gain.value = 0;
     this.isMuted = false;
+};
+AudioChannel.prototype.fade = function (volume) {
+    this.gainNode.gain.value = this.globalVolume + volume;
+    console.log('Audio fade',volume);
 };
 
 var MUSIC;

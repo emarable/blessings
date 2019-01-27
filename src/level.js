@@ -55,6 +55,7 @@ Level.prototype.onEnter = function () {
   this.isComplete = false;
   this.activeCutscene = null;
   this.delay = 0;
+  this.fadeIn = true;
 };
 Level.prototype.step = function (elapsed) {
 	if (this.isRunning) {
@@ -72,8 +73,21 @@ Level.prototype.step = function (elapsed) {
   }
   if (this.isComplete) {
     this.delay += 1;
-    if (this.delay > 300) {
+    if (this.delay > 60) {
+      MUSIC.fade(1 - (this.delay - 60) / 240);
+    } 
+    if (this.delay >= 300) {
+      MUSIC.fade(0);
       Game.setState(MainMenu);
+    }
+  }
+  if (this.fadeIn) {
+    this.delay += 1;
+    MUSIC.fade(this.delay / 60);
+    if (this.delay >= 60) {
+      MUSIC.fade(1);
+      this.fadeIn = false;
+      this.delay = 0;
     }
   }
 };
@@ -117,6 +131,14 @@ Level.prototype.draw = function (ctx) {
     
   if (this.isComplete && this.delay > 60) {
     ctx.globalAlpha = (this.delay - 60) / 240;
+    ctx.beginPath();
+    ctx.fillStyle = 'black';
+    ctx.rect(0,0,Game.WIDTH, Game.HEIGHT);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+  if (this.fadeIn) {
+    ctx.globalAlpha = 1 - (this.delay) / 60;
     ctx.beginPath();
     ctx.fillStyle = 'black';
     ctx.rect(0,0,Game.WIDTH, Game.HEIGHT);

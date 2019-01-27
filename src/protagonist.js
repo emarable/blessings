@@ -210,6 +210,23 @@ Protagonist.prototype.draw = function (ctx, camera) {
         case 1: frame = IMAGE.protagonistIdle2Right.get(); break;
         case 2: frame = IMAGE.protagonistIdle3Right.get(); break;
       }
+    } else if (this.state === "running") {
+      switch(Math.floor(this.animFrame) % 4) {
+        case 0: frame = IMAGE.protagonistMove1Right.get(); break;
+        case 1: frame = IMAGE.protagonistMove2Right.get(); break;
+        case 2: frame = IMAGE.protagonistMove3Right.get(); break;
+        case 3: frame = IMAGE.protagonistMove4Right.get(); break;
+      }
+    } else if (this.state === "rising") {
+      switch(Math.floor(this.animFrame) % 2) {
+        case 0: frame = IMAGE.protagonistRise1Right.get(); break;
+        case 1: frame = IMAGE.protagonistRise2Right.get(); break;
+      }
+    } else if (this.state === "falling") {
+      switch(Math.floor(this.animFrame) % 2) {
+        case 0: frame = IMAGE.protagonistFall1Right.get(); break;
+        case 1: frame = IMAGE.protagonistFall2Right.get(); break;
+      }
     } else {
       frame = IMAGE.protagonistIdle1Right.get();
     }
@@ -220,6 +237,23 @@ Protagonist.prototype.draw = function (ctx, camera) {
         case 0: frame = IMAGE.protagonistIdle1Left.get(); break;
         case 1: frame = IMAGE.protagonistIdle2Left.get(); break;
         case 2: frame = IMAGE.protagonistIdle3Left.get(); break;
+      }
+    } else if (this.state === "running") {
+      switch(Math.floor(this.animFrame) % 4) {
+        case 0: frame = IMAGE.protagonistMove1Left.get(); break;
+        case 1: frame = IMAGE.protagonistMove2Left.get(); break;
+        case 2: frame = IMAGE.protagonistMove3Left.get(); break;
+        case 3: frame = IMAGE.protagonistMove4Left.get(); break;
+      }
+    } else if (this.state === "rising") {
+      switch(Math.floor(this.animFrame) % 2) {
+        case 0: frame = IMAGE.protagonistRise1Left.get(); break;
+        case 1: frame = IMAGE.protagonistRise2Left.get(); break;
+      }
+    } else if (this.state === "falling") {
+      switch(Math.floor(this.animFrame) % 2) {
+        case 0: frame = IMAGE.protagonistFall1Left.get(); break;
+        case 1: frame = IMAGE.protagonistFall2Left.get(); break;
       }
     } else {
       frame = IMAGE.protagonistIdle1Left.get();

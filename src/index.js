@@ -120,6 +120,25 @@ var Game = {
     IMAGE.protagonistIdle1Right = loadSprite('assets/Still1R.png');
     IMAGE.protagonistIdle2Right = loadSprite('assets/Still2R.png');
     IMAGE.protagonistIdle3Right = loadSprite('assets/Still3R.png');
+        
+    IMAGE.protagonistMove1Left = loadSprite('assets/Move1.png');
+    IMAGE.protagonistMove2Left = loadSprite('assets/Move2.png');
+    IMAGE.protagonistMove3Left = loadSprite('assets/Move3.png');
+    IMAGE.protagonistMove4Left = loadSprite('assets/Move4.png');
+    IMAGE.protagonistMove1Right = loadSprite('assets/Move1R.png');
+    IMAGE.protagonistMove2Right = loadSprite('assets/Move2R.png');
+    IMAGE.protagonistMove3Right = loadSprite('assets/Move3R.png');
+    IMAGE.protagonistMove4Right = loadSprite('assets/Move4R.png');
+        
+    IMAGE.protagonistRise1Left = loadSprite('assets/Rise1.png');
+    IMAGE.protagonistRise2Left = loadSprite('assets/Rise2.png');
+    IMAGE.protagonistRise1Right = loadSprite('assets/Rise1R.png');
+    IMAGE.protagonistRise2Right = loadSprite('assets/Rise2R.png');
+        
+    IMAGE.protagonistFall1Left = loadSprite('assets/Fall1.png');
+    IMAGE.protagonistFall2Left = loadSprite('assets/Fall2.png');
+    IMAGE.protagonistFall1Right = loadSprite('assets/Fall1R.png');
+    IMAGE.protagonistFall2Right = loadSprite('assets/Fall2R.png');
 		
     function loadAudio (channel, path) {
       return Game.loader.register(path, "arraybuffer", function (data, callback) {

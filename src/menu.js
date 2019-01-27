@@ -43,13 +43,17 @@ var MainMenu = {
         IMAGE.ltLevel1,
         IMAGE.leaf1Level1,
         IMAGE.leaf2Level1,
+        IMAGE.squirrel,
+        IMAGE.speech,
         IMAGE.protagonistIdle1Left,
         IMAGE.protagonistIdle2Left,
         IMAGE.protagonistIdle3Left,
         IMAGE.protagonistIdle1Right,
         IMAGE.protagonistIdle2Right,
         IMAGE.protagonistIdle3Right,
-        MUSIC.level1
+        MUSIC.level1,
+        SOUND.water,
+        SOUND.landing,
       );
       init.onComplete = function () { 
         Game.currentLevel = 0;

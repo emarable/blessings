@@ -113,6 +113,8 @@ var Game = {
 		IMAGE.ltLevel1 = loadSprite('assets/Level_1_LIGHTING.png');
     IMAGE.leaf1Level1 = loadSprite('assets/Level_1_BIG_LEAF_1.png');
     IMAGE.leaf2Level1 = loadSprite('assets/Level_1_BIG_LEAF_2.png');
+    IMAGE.squirrel = loadSprite('assets/Squirrel.png');
+    IMAGE.speech = loadSprite('assets/Speech.png');
     
     IMAGE.protagonistIdle1Left = loadSprite('assets/Still1.png');
     IMAGE.protagonistIdle2Left = loadSprite('assets/Still2.png');
@@ -157,6 +159,8 @@ var Game = {
     
     SOUND = new AudioChannel(audioContext);
     SOUND.start = loadAudio(SOUND,'assets/start button.wav');
+    SOUND.water = loadAudio(SOUND,'assets/water.wav');
+    SOUND.landing = loadAudio(SOUND,'assets/landing.wav');
     
 		window.onresize();
 	},

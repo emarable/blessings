@@ -99,9 +99,12 @@ var Game = {
     IMAGE.leaf1Level1 = loadSprite('assets/Level_1_BIG_LEAF_1.png');
     IMAGE.leaf2Level1 = loadSprite('assets/Level_1_BIG_LEAF_2.png');
     
-    IMAGE.protagonistIdle1 = loadSprite('assets/Still1.png');
-    IMAGE.protagonistIdle2 = loadSprite('assets/Still2.png');
-    IMAGE.protagonistIdle3 = loadSprite('assets/Still3.png');
+    IMAGE.protagonistIdle1Left = loadSprite('assets/Still1.png');
+    IMAGE.protagonistIdle2Left = loadSprite('assets/Still2.png');
+    IMAGE.protagonistIdle3Left = loadSprite('assets/Still3.png');
+    IMAGE.protagonistIdle1Right = loadSprite('assets/Still1R.png');
+    IMAGE.protagonistIdle2Right = loadSprite('assets/Still2R.png');
+    IMAGE.protagonistIdle3Right = loadSprite('assets/Still3R.png');
 		
     MUSIC.gainNode = audioContext.createGain();
     MUSIC.gainNode.connect(audioContext.destination);

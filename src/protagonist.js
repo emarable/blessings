@@ -11,6 +11,7 @@ function Protagonist() {
   this.height = 160;
   this.offset = {
     left: -100,
+    right: -170,
     top: -240,
   };
 	this.mask = {
@@ -201,18 +202,32 @@ Protagonist.prototype.draw = function (ctx, camera) {
   // }
   // ctx.rect(tx, ty, (this.mask.right - this.mask.left) / camera.w * Game.WIDTH, (this.mask.bottom - this.mask.top) / camera.h * Game.HEIGHT);
   // ctx.fill();
-  var frame = IMAGE.protagonistIdle1.get();
-  if (this.state === "standing") {
-    switch(Math.floor(this.animFrame) % 3) {
-      case 0: frame = IMAGE.protagonistIdle1.get(); break;
-      case 1: frame = IMAGE.protagonistIdle2.get(); break;
-      case 2: frame = IMAGE.protagonistIdle3.get(); break;
+  if (this.facing === 1) {
+    var frame = IMAGE.protagonistIdle1Right.get();
+    if (this.state === "standing") {
+      switch(Math.floor(this.animFrame) % 3) {
+        case 0: frame = IMAGE.protagonistIdle1Right.get(); break;
+        case 1: frame = IMAGE.protagonistIdle2Right.get(); break;
+        case 2: frame = IMAGE.protagonistIdle3Right.get(); break;
+      }
+    } else {
+      frame = IMAGE.protagonistIdle1Right.get();
     }
   } else {
-    frame = IMAGE.protagonistIdle1.get();
+    var frame = IMAGE.protagonistIdle1Left.get();
+    if (this.state === "standing") {
+      switch(Math.floor(this.animFrame) % 3) {
+        case 0: frame = IMAGE.protagonistIdle1Left.get(); break;
+        case 1: frame = IMAGE.protagonistIdle2Left.get(); break;
+        case 2: frame = IMAGE.protagonistIdle3Left.get(); break;
+      }
+    } else {
+      frame = IMAGE.protagonistIdle1Left.get();
+    }
   }
  
-  var tx = (Math.floor(this.x - camera.x) + this.offset.left) / camera.w * Game.WIDTH;
+  var offsetX = (this.facing === 1 ? this.offset.right : this.offset.left);
+  var tx = (Math.floor(this.x - camera.x) + offsetX) / camera.w * Game.WIDTH;
   var ty = (Math.floor(this.y - camera.y) + this.offset.top) / camera.h * Game.HEIGHT;
   var tw = frame.width / camera.w * Game.WIDTH;
   var th = frame.height / camera.h * Game.HEIGHT;

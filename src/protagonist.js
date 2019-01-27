@@ -32,6 +32,7 @@ function Protagonist() {
   this.control = true;
   
   this.isClimbing = true;
+  this.isOnGround = true;
   
   this.acceleration = 1;
   this.maxSpeed = 6;
@@ -137,6 +138,7 @@ Protagonist.prototype.step = function (elapsed) {
       this.y = wallDown.y - this.mask.bottom;
       this.vSpeed = Math.min(this.vSpeed,0);
       if (this.vSpeed >= 0) { this.jump = currentMaxJump; }
+      this.isOnGround = true;
     } else {
       wallDown = Game.ui.boxCollide(
         this.x + this.mask.left + this.maxSpeed, 
@@ -154,9 +156,11 @@ Protagonist.prototype.step = function (elapsed) {
         this.y = wallDown.y - this.mask.bottom;
         this.vSpeed = Math.min(this.vSpeed,0);
         if (this.vSpeed >= 0) { this.jump = currentMaxJump; }
+        this.isOnGround = true;
       } else {
         this.state = "falling";
         this.vSpeed += currentAcceleration;
+        this.isOnGround = false;
       }
     }
     if (wallLeft) {
@@ -229,7 +233,19 @@ Protagonist.prototype.draw = function (ctx, camera) {
   // ctx.fill();
   if (this.facing === 1) {
     var frame = IMAGE.protagonistIdle1Right.get();
-    if (this.state === "standing") {
+    if (!this.isOnGround) {
+      if (this.vSpeed < 0) {
+        switch(Math.floor(this.animFrame) % 2) {
+          case 0: frame = IMAGE.protagonistRise1Right.get(); break;
+          case 1: frame = IMAGE.protagonistRise2Right.get(); break;
+        }
+      } else {
+        switch(Math.floor(this.animFrame) % 2) {
+          case 0: frame = IMAGE.protagonistFall1Right.get(); break;
+          case 1: frame = IMAGE.protagonistFall2Right.get(); break;
+        }
+      }
+    } else if (this.state === "standing") {
       switch(Math.floor(this.animFrame) % 3) {
         case 0: frame = IMAGE.protagonistIdle1Right.get(); break;
         case 1: frame = IMAGE.protagonistIdle2Right.get(); break;
@@ -242,22 +258,24 @@ Protagonist.prototype.draw = function (ctx, camera) {
         case 2: frame = IMAGE.protagonistMove3Right.get(); break;
         case 3: frame = IMAGE.protagonistMove4Right.get(); break;
       }
-    } else if (this.state === "rising") {
-      switch(Math.floor(this.animFrame) % 2) {
-        case 0: frame = IMAGE.protagonistRise1Right.get(); break;
-        case 1: frame = IMAGE.protagonistRise2Right.get(); break;
-      }
-    } else if (this.state === "falling") {
-      switch(Math.floor(this.animFrame) % 2) {
-        case 0: frame = IMAGE.protagonistFall1Right.get(); break;
-        case 1: frame = IMAGE.protagonistFall2Right.get(); break;
-      }
     } else {
       frame = IMAGE.protagonistIdle1Right.get();
     }
   } else {
     var frame = IMAGE.protagonistIdle1Left.get();
-    if (this.state === "standing") {
+    if (!this.isOnGround) {
+      if (this.vSpeed < 0) {
+        switch(Math.floor(this.animFrame) % 2) {
+          case 0: frame = IMAGE.protagonistRise1Left.get(); break;
+          case 1: frame = IMAGE.protagonistRise2Left.get(); break;
+        }
+      } else {
+        switch(Math.floor(this.animFrame) % 2) {
+          case 0: frame = IMAGE.protagonistFall1Left.get(); break;
+          case 1: frame = IMAGE.protagonistFall2Left.get(); break;
+        }
+      }
+    } else if (this.state === "standing") {
       switch(Math.floor(this.animFrame) % 3) {
         case 0: frame = IMAGE.protagonistIdle1Left.get(); break;
         case 1: frame = IMAGE.protagonistIdle2Left.get(); break;
@@ -269,16 +287,6 @@ Protagonist.prototype.draw = function (ctx, camera) {
         case 1: frame = IMAGE.protagonistMove2Left.get(); break;
         case 2: frame = IMAGE.protagonistMove3Left.get(); break;
         case 3: frame = IMAGE.protagonistMove4Left.get(); break;
-      }
-    } else if (this.state === "rising") {
-      switch(Math.floor(this.animFrame) % 2) {
-        case 0: frame = IMAGE.protagonistRise1Left.get(); break;
-        case 1: frame = IMAGE.protagonistRise2Left.get(); break;
-      }
-    } else if (this.state === "falling") {
-      switch(Math.floor(this.animFrame) % 2) {
-        case 0: frame = IMAGE.protagonistFall1Left.get(); break;
-        case 1: frame = IMAGE.protagonistFall2Left.get(); break;
       }
     } else {
       frame = IMAGE.protagonistIdle1Left.get();

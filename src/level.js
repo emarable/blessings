@@ -12,11 +12,11 @@ Level.prototype.onEnter = function () {
     w: 800,
     h: 800 / ASPECT_RATIO,
   };
-  
-  // if (!MUSIC.mission.get().isPlaying) {
-    // MUSIC.stopAll();
-    // MUSIC.play(Game.audioContext, MUSIC.mission.get());
-  // }
+     
+    if (!MUSIC.level1.get().isPlaying) {
+      MUSIC.stopAll();
+      MUSIC.play(Game.audioContext, MUSIC.level1.get());
+    }
   
 	this.protagonist = new Protagonist();
   this.protagonist.x = this.data.protagonist[0];
@@ -144,6 +144,7 @@ levels[0] = new Level({
   background: 'bgLevel1',
   foreground: 'fgLevel1',
   lighting: 'ltLevel1',
+  music: 'level1',
   walls: [
     [880,1800,100,100],
     [860,1820,400,100],

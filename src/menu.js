@@ -3,10 +3,10 @@ var MainMenu = {
     this.background = IMAGE.bgTitle.get();
 		this.buttonStart = new Button(0.672,0.388,0.13,0.11);
 		    
-    // if (!MUSIC.menu.get().isPlaying) {
-      // MUSIC.stopAll();
-      // MUSIC.play(Game.audioContext, MUSIC.menu.get());
-    // }
+    if (!MUSIC.title.get().isPlaying) {
+      MUSIC.stopAll();
+      MUSIC.play(Game.audioContext, MUSIC.title.get());
+    }
     
     try {
       this.savedGame = {
@@ -35,6 +35,8 @@ var MainMenu = {
 	},
 	mouseup: function (ev) {
 		if (this.buttonStart.hover) {
+      MUSIC.play(Game.audioContext, MUSIC.start.get());
+      
       var init = Game.loader.require(
         IMAGE.bgLevel1,
         IMAGE.fgLevel1,
@@ -47,12 +49,13 @@ var MainMenu = {
         IMAGE.protagonistIdle1Right,
         IMAGE.protagonistIdle2Right,
         IMAGE.protagonistIdle3Right,
+        MUSIC.level1
       );
       init.onComplete = function () { 
         Game.currentLevel = 0;
         Game.setState(levels[Game.currentLevel]); 
       };
       Game.setState(init);
-		}
+		} 
 	}
 };

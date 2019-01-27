@@ -121,17 +121,11 @@ var Game = {
         });
       });
     }
-        
-    try {
-      if (localStorage.getItem('gad.monday.mute') === 'false') {
-        MUSIC.unMute();
-      } else {
-        MUSIC.mute();
-      }
-    } catch (ex) {
-      MUSIC.mute();
-    }
-		
+    
+    MUSIC.title = loadMusic('assets/Decline (Title).mp3');
+    MUSIC.start = loadMusic('assets/start button.wav');
+    MUSIC.level1 = loadMusic('assets/Clear Air (Forests).mp3');
+    
 		window.onresize();
 	},
 	start: function () {
@@ -144,7 +138,10 @@ var Game = {
     
     updateViewport();
 	
-    var init = that.loader.require(IMAGE.bgTitle);
+    var init = that.loader.require([
+      IMAGE.bgTitle,
+      MUSIC.title,
+    ]);
     init.onComplete = function () { that.setState(MainMenu); };
 		this.setState(init);
 	
@@ -185,6 +182,11 @@ var Game = {
 	},
 	mouseup: function (ev) {
 		if (this.ui.mouseup) { this.ui.mouseup(ev); }
+    if(this.audioContext.state === 'suspended') {
+      this.audioContext.resume().then(function() {
+        console.log('audio on');
+      });  
+    }
 	},
 	keydown: function (ev) {
 		if (this.ui.keydown) { this.ui.keydown(ev); }

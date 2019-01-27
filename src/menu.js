@@ -41,6 +41,9 @@ var MainMenu = {
         IMAGE.ltLevel1,
         IMAGE.leaf1Level1,
         IMAGE.leaf2Level1,
+        IMAGE.protagonistIdle1,
+        IMAGE.protagonistIdle2,
+        IMAGE.protagonistIdle3,
       );
       init.onComplete = function () { 
         Game.currentLevel = 0;

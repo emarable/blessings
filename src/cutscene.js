@@ -61,11 +61,12 @@ Cutscene.prototype.keydown = function (ev) {
 Cutscene.prototype.keyup = function (elapsed) {
   var text = this.data.texts[this.currentText];
   if (this.scroll >= text.length * this.textSpeed + this.textFade) {
+    SOUND.play(SOUND.dialogue.get());
     this.currentText += 1;
     this.scroll = 0;
     if (this.data.texts.length <= this.currentText) {
       Game.ui.endCutscene();
-    }
+    } 
   }
 };
 
@@ -75,6 +76,8 @@ Cutscene.prototype.start = function () {
   this.currentText = 0;
   this.scroll = 0;
   this.speechImage = IMAGE.speech.get();
+  
+  SOUND.play(SOUND.dialogue.get());
 };
 
 var cutscenes = [];

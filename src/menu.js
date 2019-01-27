@@ -65,6 +65,7 @@ var MainMenu = {
         MUSIC.level1,
         SOUND.water,
         SOUND.landing,
+        SOUND.dialogue,
       );
       init.onComplete = function () { 
         Game.currentLevel = 0;

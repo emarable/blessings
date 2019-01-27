@@ -167,6 +167,7 @@ var Game = {
     SOUND.start = loadAudio(SOUND,'assets/start button.wav');
     SOUND.water = loadAudio(SOUND,'assets/water.wav');
     SOUND.landing = loadAudio(SOUND,'assets/landing.wav');
+    SOUND.dialogue = loadAudio(SOUND,'assets/dialogue.wav');
     
 		window.onresize();
 	},

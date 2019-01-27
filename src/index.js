@@ -61,7 +61,6 @@ AudioChannel.prototype.unMute = function () {
 };
 AudioChannel.prototype.fade = function (volume) {
     this.gainNode.gain.value = this.globalVolume + volume;
-    console.log('Audio fade',volume);
 };
 
 var MUSIC;

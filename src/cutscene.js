@@ -1,5 +1,30 @@
-var fontSize = 40;
-var font = 'bold ' +fontSize + 'px sans-serif';
+var breakpoints = [
+{
+  at: 640,
+  fontSize: 16,
+  marginHorizontal: 20,
+  marginVertical: 20,
+  strokeWidth: 1.5,
+},
+{
+  at: 1000,
+  fontSize: 28,
+  marginHorizontal: 40,
+  marginVertical: 40,
+  strokeWidth: 2,
+},
+{
+  at: Infinity,
+  fontSize: 40,
+  marginHorizontal: 60,
+  marginVertical: 60,
+  strokeWidth: 3,
+}
+];
+
+function font(breakpoint) {
+  return 'bold '+breakpoint.fontSize +'px sans-serif';
+}
 
 function Cutscene(data) {
   this.x = data.x;
@@ -8,11 +33,10 @@ function Cutscene(data) {
   this.currentText = 0;
   this.scroll = 0;
   
-  this.marginH = 32;
-  this.marginV = 96;
   this.textSpeed = 5;
   this.textFade = 60;
   this.textBounce = 2;
+  this.shadow = 2;
 }
 Cutscene.prototype.step = function (elapsed) {
   this.scroll += 1;
@@ -21,12 +45,14 @@ Cutscene.prototype.draw = function (ctx, camera) {
   var text = this.data.texts[this.currentText];
   var tx = this.x * Game.WIDTH;
   var ty = this.y * Game.HEIGHT;
+  
+  var style = breakpoints.find(function (b) { return Game.WIDTH <= b.at; });
     
   ctx.globalAlpha = 1;
   ctx.fillStyle = 'white';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
-  ctx.font = font;
+  ctx.font = font(style);
   
   var textSize = ctx.measureText(text);
   
@@ -35,23 +61,30 @@ Cutscene.prototype.draw = function (ctx, camera) {
   // ctx.fill();
   
   ctx.drawImage(this.speechImage, 
-    tx, ty, textSize.width + this.marginH * 2, fontSize + this.marginV * 2);
+    tx, ty, textSize.width + style.marginHorizontal * 2, style.fontSize + style.marginVertical * 2);
   
-  ctx.lineWidth = 2;
+  ctx.lineWidth = style.strokeWidth * 2;
   ctx.strokeStyle = 'black';
-  ctx.fillStyle = 'white';
   for (var i = 0; i < text.length; ++i) {
     if (this.scroll < i * this.textSpeed) break;
     
     var bounce = Math.sin(-(this.scroll + i * this.textSpeed) * Math.PI/60) * this.textBounce;
+    var fade = Math.min(1, (this.scroll - i * this.textSpeed) / this.textFade);
     
-    ctx.globalAlpha = Math.min(1, (this.scroll - i * this.textSpeed) / this.textFade);
+    ctx.fillStyle = 'black';
+    ctx.globalAlpha = fade / 2;
     ctx.fillText(text[i], 
-      tx + this.marginH + ctx.measureText(text.slice(0,i)).width, 
-      ty + this.marginV + bounce);
+      tx + style.marginHorizontal + ctx.measureText(text.slice(0,i)).width + this.shadow * style.strokeWidth, 
+      ty + style.marginVertical + bounce + this.shadow * style.strokeWidth);
+      
+    ctx.fillStyle = 'white';
+    ctx.globalAlpha = fade;
     ctx.strokeText(text[i], 
-      tx + this.marginH + ctx.measureText(text.slice(0,i)).width, 
-      ty + this.marginV + bounce);
+      tx + style.marginHorizontal + ctx.measureText(text.slice(0,i)).width, 
+      ty + style.marginVertical + bounce);
+    ctx.fillText(text[i], 
+      tx + style.marginHorizontal + ctx.measureText(text.slice(0,i)).width, 
+      ty + style.marginVertical + bounce);
   }
   
   ctx.globalAlpha = 1;
@@ -83,7 +116,7 @@ Cutscene.prototype.start = function () {
 var cutscenes = [];
 cutscenes[0] = new Cutscene({
   x: 0.4,
-  y: 0,
+  y: 0.1,
   texts: [
     "I am a squirrel",
     "Jack will fill this in later",

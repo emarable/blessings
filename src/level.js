@@ -15,7 +15,7 @@ Level.prototype.onEnter = function () {
      
     if (!MUSIC.level1.get().isPlaying) {
       MUSIC.stopAll();
-      MUSIC.play(Game.audioContext, MUSIC.level1.get());
+      MUSIC.play(MUSIC.level1.get());
     }
   
 	this.protagonist = new Protagonist();

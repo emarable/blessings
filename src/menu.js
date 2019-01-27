@@ -5,7 +5,7 @@ var MainMenu = {
 		    
     if (!MUSIC.title.get().isPlaying) {
       MUSIC.stopAll();
-      MUSIC.play(Game.audioContext, MUSIC.title.get());
+      MUSIC.play(MUSIC.title.get());
     }
     
     try {
@@ -35,7 +35,7 @@ var MainMenu = {
 	},
 	mouseup: function (ev) {
 		if (this.buttonStart.hover) {
-      MUSIC.play(Game.audioContext, MUSIC.start.get());
+      SOUND.play(SOUND.start.get());
       
       var init = Game.loader.require(
         IMAGE.bgLevel1,

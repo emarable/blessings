@@ -12,39 +12,54 @@ var canvasX = 0;
 var canvasY = 0;
 
 var IMAGE = {};
-var MUSIC = {
-  play: function (context, audioObject) {
-    if (!audioObject.source) {
-    var source = context.createBufferSource();
+function AudioChannel (context) {
+  this.audioContext = context;
+  this.defaultLoop = false;
+  
+  this.gainNode = this.audioContext.createGain();
+  this.gainNode.connect(this.audioContext.destination);
+  this.gainNode.gain.value = 0;
+  
+  this.__buffers = [];
+}
+AudioChannel.prototype.play = function (audioObject) {
+  if (!audioObject.source) {
+    var source = this.audioContext.createBufferSource();
     source.buffer = audioObject.buffer;
     source.connect(this.gainNode);
-    source.connect(context.destination);
-    source.loop = true;
+    source.connect(this.audioContext.destination);
+    source.loop = this.defaultLoop;
     source.start();
+    source.onended = function () {
+      delete audioObject.source;
+      audioObject.isPlaying = false;
+    };
     
     audioObject.source = source;
     audioObject.isPlaying = true;
-    }
-  },
-  stop: function (audioObject) {
-    if (audioObject.source) {
-      audioObject.isPlaying = false;
-      audioObject.source.stop();
-      delete audioObject.source;
-    }
-  },
-  stopAll: function () {
-    this.__buffers.forEach(this.stop);
-  },
-  mute: function () {
-    this.gainNode.gain.value = -1;
-    this.isMuted = true;
-  },
-  unMute: function () {
-    this.gainNode.gain.value = 0;
-    this.isMuted = false;
   }
 };
+AudioChannel.prototype.stop = function (audioObject) {
+  if (audioObject.source) {
+    audioObject.isPlaying = false;
+    audioObject.source.stop();
+    delete audioObject.source;
+  }
+};
+AudioChannel.prototype.stopAll = function () {
+  this.__buffers.forEach(this.stop);
+};
+AudioChannel.prototype.mute = function () {
+    this.gainNode.gain.value = -1;
+    this.isMuted = true;
+};
+AudioChannel.prototype.unMute = function () {
+    this.gainNode.gain.value = 0;
+    this.isMuted = false;
+};
+
+var MUSIC;
+var SOUND;
 
 function updateViewport() {
 	canvasX = mainCanvas.offsetLeft;
@@ -106,25 +121,23 @@ var Game = {
     IMAGE.protagonistIdle2Right = loadSprite('assets/Still2R.png');
     IMAGE.protagonistIdle3Right = loadSprite('assets/Still3R.png');
 		
-    MUSIC.gainNode = audioContext.createGain();
-    MUSIC.gainNode.connect(audioContext.destination);
-    MUSIC.gainNode.gain.value = 0;
-    
-    MUSIC.__buffers = [];
-    
-    function loadMusic (path) {
+    function loadAudio (channel, path) {
       return Game.loader.register(path, "arraybuffer", function (data, callback) {
         audioContext.decodeAudioData(data).then(function (audioBuffer) {          
           var audioObject = {buffer: audioBuffer};          
-          MUSIC.__buffers.push(audioObject);
+          channel.__buffers.push(audioObject);
           callback(audioObject);
         });
       });
     }
     
-    MUSIC.title = loadMusic('assets/Decline (Title).mp3');
-    MUSIC.start = loadMusic('assets/start button.wav');
-    MUSIC.level1 = loadMusic('assets/Clear Air (Forests).mp3');
+    MUSIC = new AudioChannel(audioContext);
+    MUSIC.defaultLoop = true;
+    MUSIC.title = loadAudio(MUSIC,'assets/Decline (Title).mp3');
+    MUSIC.level1 = loadAudio(MUSIC,'assets/Clear Air (Forests).mp3');
+    
+    SOUND = new AudioChannel(audioContext);
+    SOUND.start = loadAudio(SOUND,'assets/start button.wav');
     
 		window.onresize();
 	},
@@ -141,6 +154,7 @@ var Game = {
     var init = that.loader.require([
       IMAGE.bgTitle,
       MUSIC.title,
+      SOUND.start,
     ]);
     init.onComplete = function () { that.setState(MainMenu); };
 		this.setState(init);

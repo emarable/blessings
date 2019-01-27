@@ -1,7 +1,7 @@
 var MainMenu = {
 	onEnter: function () {
     this.background = IMAGE.bgTitle.get();
-		this.buttonStart = new Button(0.62,0.38,0.13,0.11);
+		this.buttonStart = new Button(0.672,0.388,0.13,0.11);
 		    
     // if (!MUSIC.menu.get().isPlaying) {
       // MUSIC.stopAll();
@@ -35,7 +35,13 @@ var MainMenu = {
 	},
 	mouseup: function (ev) {
 		if (this.buttonStart.hover) {
-      var init = Game.loader.require(IMAGE.bgLevel1);
+      var init = Game.loader.require(
+        IMAGE.bgLevel1,
+        IMAGE.fgLevel1,
+        IMAGE.ltLevel1,
+        IMAGE.leaf1Level1,
+        IMAGE.leaf2Level1,
+      );
       init.onComplete = function () { 
         Game.currentLevel = 0;
         Game.setState(levels[Game.currentLevel]); 

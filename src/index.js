@@ -92,8 +92,16 @@ var Game = {
       });
 		}
 		
-		IMAGE.bgTitle = loadSprite('assets/title.png');
-		IMAGE.bgLevel1 = loadSprite('assets/Level_1.jpg');
+		IMAGE.bgTitle = loadSprite('assets/Menu.jpg');
+		IMAGE.bgLevel1 = loadSprite('assets/Level_1_MAIN.jpg');
+		IMAGE.fgLevel1 = loadSprite('assets/Level_1_FORE.png');
+		IMAGE.ltLevel1 = loadSprite('assets/Level_1_LIGHTING.png');
+    IMAGE.leaf1Level1 = loadSprite('assets/Level_1_BIG_LEAF_1.png');
+    IMAGE.leaf2Level1 = loadSprite('assets/Level_1_BIG_LEAF_2.png');
+    
+    IMAGE.protagonistIdle1 = loadSprite('assets/Still1.png');
+    IMAGE.protagonistIdle2 = loadSprite('assets/Still2.png');
+    IMAGE.protagonistIdle3 = loadSprite('assets/Still3.png');
 		
     MUSIC.gainNode = audioContext.createGain();
     MUSIC.gainNode.connect(audioContext.destination);

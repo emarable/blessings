@@ -6,11 +6,18 @@ function Protagonist() {
   this.animationFrame = 0;
   this.hSpeed = 0;
   this.vSpeed = 0;
+  
+  this.width = 80;
+  this.height = 160;
+  this.offset = {
+    left: -100,
+    top: -240,
+  };
 	this.mask = {
-		left: -30,
-		top: -40,
-		right: 30,
-		bottom: 40
+		left: -this.width/2,
+		top: -this.height/2,
+		right: this.width/2,
+		bottom: this.height/2
 	};
 	this.keys = {
 		left: false,
@@ -21,9 +28,14 @@ function Protagonist() {
 	};
   this.control = true;
   
-  this.acceleration = 0.25;
-  this.maxSpeed = 8;
+  this.acceleration = 1;
+  this.maxSpeed = 6;
+  this.maxJump = 8;
   this.jump = 8;
+  this.climbSpeed = 3;
+  
+  this.animFrame = 0;
+  this.animSpeed = 0.1;
 }
 Protagonist.prototype.step = function (elapsed) {
   var xPrevious = this.x;
@@ -32,54 +44,135 @@ Protagonist.prototype.step = function (elapsed) {
   this.y += this.vSpeed;
   
 	if (this.control) {
+    var currentMaxSpeed = this.maxSpeed;
+    var currentAcceleration = this.acceleration;
+    var currentMaxJump = this.maxJump;
+    
+    if (Game.ui.boxCollide(
+      this.x + this.mask.left, 
+      this.y + this.mask.top,
+      this.x + this.mask.right,
+      this.y + this.mask.bottom,
+      Game.ui.waters
+    )) {
+      this.water = true;
+      currentMaxSpeed = this.maxSpeed / 3;
+      currentAcceleration = this.acceleration / 3;
+      currentMaxJump = this.maxJump * 3;
+      
+      if (this.hSpeed > currentMaxSpeed) this.hSpeed -= currentAcceleration;
+      if (this.hSpeed < -currentMaxSpeed) this.hSpeed += currentAcceleration;
+      if (this.vSpeed > currentMaxSpeed) this.vSpeed -= currentAcceleration;
+      if (this.vSpeed < -currentMaxSpeed) this.vSpeed += currentAcceleration;
+    } else {
+      this.water = false;
+    }
+    
+    if (Game.ui.boxCollide(
+      this.x + this.mask.left, 
+      this.y + this.mask.top,
+      this.x + this.mask.right,
+      this.y + this.mask.bottom,
+      Game.ui.climbs
+    )) {
+      this.state = "climbing";
+      this.jump = this.maxJump
+      
+      if (this.keys.up) this.vSpeed = -this.climbSpeed;
+      if (this.keys.down) this.vSpeed = this.climbSpeed;
+      
+      if (this.hSpeed > this.climbSpeed) this.hSpeed -= currentAcceleration;
+      if (this.hSpeed < -this.climbSpeed) this.hSpeed += currentAcceleration;
+      for (var i = 0; i < 4; ++i) {
+        if (this.vSpeed > this.climbSpeed) this.vSpeed -= currentAcceleration;
+      }
+      if (this.vSpeed < -this.climbSpeed) this.vSpeed += currentAcceleration;
+    }
+    
 		if (this.keys.left) {
-      if (this.hSpeed > -this.maxSpeed) {
-        this.hSpeed -= this.acceleration;
+      if (this.hSpeed > -currentMaxSpeed) {
+        this.hSpeed -= currentAcceleration;
       }
       this.state = "running";
       this.facing = 0;
     } else if (this.keys.right) {
-      if (this.hSpeed < this.maxSpeed) {
-        this.hSpeed += this.acceleration;
+      if (this.hSpeed < currentMaxSpeed) {
+        this.hSpeed += currentAcceleration;
       }
       this.state = "running";
       this.facing = 1;
     } else {
-      if (this.hSpeed < -this.acceleration) { this.hSpeed += this.acceleration; }
-      else if (this.hSpeed > this.acceleration) { this.hSpeed -= this.acceleration; }
+      if (this.hSpeed < -currentAcceleration) { this.hSpeed += currentAcceleration; }
+      else if (this.hSpeed > currentAcceleration) { this.hSpeed -= currentAcceleration; }
       else { this.hSpeed = 0; this.state = "standing"; }
     }
     
-    var wallDown = Game.ui.pointCollide(this.x,this.y+this.mask.bottom,Game.ui.walls);
-    var wallLeft = Game.ui.pointCollide(this.x + this.mask.left,this.y,Game.ui.walls);
-    var wallRight = Game.ui.pointCollide(this.x + this.mask.right,this.y,Game.ui.walls);
-    var wallUp = Game.ui.pointCollide(this.x,this.y+this.mask.top,Game.ui.walls);
+    var wallDown = Game.ui.boxCollide(
+      this.x + this.mask.left + this.maxSpeed, 
+      this.y + this.mask.bottom,
+      this.x + this.mask.right - this.maxSpeed,
+      this.y + this.mask.bottom,
+      Game.ui.walls.concat(Game.ui.platforms)
+    );
+    var wallLeft = Game.ui.pointCollide(
+      this.x + this.mask.left,
+      this.y,
+      Game.ui.walls
+    );
+    var wallRight = Game.ui.pointCollide(
+      this.x + this.mask.right,
+      this.y,
+      Game.ui.walls
+    );
+    var wallUp = Game.ui.pointCollide(
+      this.x,
+      this.y+this.mask.top,
+      Game.ui.walls
+    );
     
-    if (this.y >= Game.ui.data.height - this.mask.bottom) {
+    if (this.y + this.mask.bottom < 0) {
+      this.control = false;
+      Game.ui.complete();
+    }
+    
+    if (this.x + this.mask.left <= 0) {
+      wallLeft = {x: 0, mask: {right: 0}}
+    }
+    if (this.x + this.mask.right >= Game.ui.data.width) {
+      wallRight = {x: Game.ui.data.width, mask: {left: 0}}
+    }
+    if (this.y + this.mask.bottom >= Game.ui.data.height) {
       wallDown = {y: Game.ui.data.height}
     }
     
     if (wallDown) {
       this.y = wallDown.y - this.mask.bottom;
       this.vSpeed = Math.min(this.vSpeed,0);
-      if (this.vSpeed >= 0) { this.jump = 8; }
+      if (this.vSpeed >= 0) { this.jump = currentMaxJump; }
     } else {
+      wallDown = Game.ui.boxCollide(
+        this.x + this.mask.left + this.maxSpeed, 
+        yPrevious + this.mask.bottom,
+        this.x + this.mask.right - this.maxSpeed,
+        this.y + this.mask.bottom,
+        Game.ui.walls.concat(Game.ui.platforms)
+      );
       //wallDown = collision_line(x,y+8,x,yprevious+8,OB_Wall,false,true);
       if (wallDown) {
         this.y = wallDown.y - this.mask.bottom;
         this.vSpeed = Math.min(this.vSpeed,0);
-        if (this.vSpeed >= 0) { this.jump = 8; }
+        if (this.vSpeed >= 0) { this.jump = currentMaxJump; }
+      } else {
+        this.state = "falling";
+        this.vSpeed += currentAcceleration;
       }
-      
-      this.state = "falling";
-      this.vSpeed += this.acceleration;
     }
     if (wallLeft) {
-      this.x = wallLeft.x - this.mask.left;
+      this.x = wallLeft.x + wallLeft.mask.right - this.mask.left;
       this.hSpeed = Math.max(this.hSpeed,0);
     }
     if (wallRight) {
-      this.x = wallRight.x - this.mask.right;
+      this.x = wallRight.x + wallRight.mask.left - this.mask.right;
       this.hSpeed = Math.min(this.hSpeed,0);
     }
     if (wallUp) {
@@ -87,49 +180,60 @@ Protagonist.prototype.step = function (elapsed) {
       this.vSpeed = Math.max(this.vSpeed,0);
     }
    
-    if (this.keys.jump && this.jump > 0) {
-      this.vSpeed -= 3*this.acceleration;
+    if (this.keys.up && this.jump > 0 && this.state !== "climbing") {
+      this.vSpeed -= 3*currentAcceleration;
       this.jump -= 1;
       this.state = "falling";
     } else if (!wallDown) {
       this.jump = 0;
     }
+    
+    this.animFrame += this.animSpeed;
 	}
 }
 Protagonist.prototype.draw = function (ctx, camera) {
-	// Character
-  var hFrame = 0;
+	
+  // ctx.beginPath();
+  // if (this.water) {
+    // ctx.fillStyle = 'blue';
+  // } else {
+    // ctx.fillStyle = 'black';
+  // }
+  // ctx.rect(tx, ty, (this.mask.right - this.mask.left) / camera.w * Game.WIDTH, (this.mask.bottom - this.mask.top) / camera.h * Game.HEIGHT);
+  // ctx.fill();
+  var frame = IMAGE.protagonistIdle1.get();
   if (this.state === "standing") {
-    hFrame = 0;
-  } else if (this.state == "running") {
-    this.animationFrame += Math.abs(this.hSpeed);
-    if (this.animationFrame < 30) {
-      hFrame = 1;
-    } else if (this.animationFrame < 60) {
-      hFrame = 2;
-    } else {
-      hFrame = 2;
-      this.animationFrame = 0;
+    switch(Math.floor(this.animFrame) % 3) {
+      case 0: frame = IMAGE.protagonistIdle1.get(); break;
+      case 1: frame = IMAGE.protagonistIdle2.get(); break;
+      case 2: frame = IMAGE.protagonistIdle3.get(); break;
     }
-  } else if (this.state = "falling") {
-    if (this.vSpeed < 0) { hFrame = 4; }
-    else { hFrame = 3; }
+  } else {
+    frame = IMAGE.protagonistIdle1.get();
   }
-  var vFrame = (this.facing === 1 ? 0 : 1);
+ 
+  var tx = (Math.floor(this.x - camera.x) + this.offset.left) / camera.w * Game.WIDTH;
+  var ty = (Math.floor(this.y - camera.y) + this.offset.top) / camera.h * Game.HEIGHT;
+  var tw = frame.width / camera.w * Game.WIDTH;
+  var th = frame.height / camera.h * Game.HEIGHT;
   
-  var tx = (Math.floor(this.x - camera.x) + this.mask.left) / camera.w * Game.WIDTH;
-  var ty = (Math.floor(this.y - camera.y) + this.mask.top) / camera.h * Game.HEIGHT;
-  
-  ctx.beginPath();
-  ctx.filStyle = 'black';
-  ctx.rect(tx, ty, (this.mask.right - this.mask.left) / camera.w * Game.WIDTH, (this.mask.bottom - this.mask.top) / camera.h * Game.HEIGHT);
-  ctx.fill();
-	// ctx.drawImage(IMAGE.edward.get(), 
-    // hFrame * 16, vFrame * 16, 16, 16, 
-    // tx, ty, 32, 32);
+  ctx.drawImage(frame, 
+    0, 0, frame.width, frame.height, 
+    tx, ty, tw, th);
     
-  ctx.fillStyle = "black";
-	ctx.fillText('('+this.x+','+this.y+')', tx, ty - 16);
+  tx = (Math.floor(this.x - camera.x) + this.mask.left) / camera.w * Game.WIDTH;
+  ty = (Math.floor(this.y - camera.y) + this.mask.top) / camera.h * Game.HEIGHT;
+  ctx.beginPath();
+  ctx.strokeStyle = 'red';
+  ctx.fillStyle = 'red';
+  ctx.rect(tx, ty, (this.mask.right - this.mask.left) / camera.w * Game.WIDTH, (this.mask.bottom - this.mask.top) / camera.h * Game.HEIGHT);
+  ctx.stroke();
+  ctx.globalAlpha = 0.2;
+  ctx.fill();
+  ctx.globalAlpha = 1;
+    
+  // ctx.fillStyle = "black";
+	// ctx.fillText('('+this.x+','+this.y+')', tx, ty - 16);
 }
 Protagonist.prototype.keydown = function (ev) {
 	switch(ev.keyCode) {

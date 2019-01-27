@@ -65,7 +65,7 @@ Level.prototype.step = function (elapsed) {
       this.dynamic[i].step(elapsed);
     }
     
-    this.camera.x = Math.max(0,Math.min(this.data.width - this.camera.w, this.protagonist.x - this.camera.h / 2));
+    this.camera.x = Math.max(0,Math.min(this.data.width - this.camera.w, this.protagonist.x - this.camera.w / 2));
     this.camera.y = Math.max(0,Math.min(this.data.height - this.camera.h, this.protagonist.y - this.camera.h / 2));
 	}
   if (this.activeCutscene) {

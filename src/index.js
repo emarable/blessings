@@ -124,6 +124,8 @@ var Game = {
     IMAGE.bgLevel2 = loadSprite('assets/level2/COMPOSITE.jpg');
     IMAGE.bgLevel3 = loadSprite('assets/level3/COMPOSITE.jpg');
     IMAGE.bgLevel4 = loadSprite('assets/level4/COMPOSITE.jpg');
+    IMAGE.bgEnding = loadSprite('assets/FIN.jpg');
+    IMAGE.bgCredits = loadSprite('assets/Credits2.jpg');
     
     IMAGE.protagonistIdle1Left = loadSprite('assets/character/Still1.png');
     IMAGE.protagonistIdle2Left = loadSprite('assets/character/Still2.png');

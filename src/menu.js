@@ -69,7 +69,8 @@ var MainMenu = {
       );
       init.onComplete = function () { 
         Game.currentLevel = 0;
-        Game.setState(levels[Game.currentLevel]); 
+        // Game.setState(levels[Game.currentLevel]); 
+        Game.setState(Ending.init());
       };
       
       this.nextState = init;

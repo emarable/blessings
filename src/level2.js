@@ -77,5 +77,5 @@ levels[1] = new Level({
   cutscenes: [
   ],
     //665, 2730
-  protagonist: [120,300],
+  protagonist: [665,2730],
 });

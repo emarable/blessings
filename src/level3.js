@@ -5,6 +5,9 @@ levels[2] = new Level({
   foreground: 'fgLevel3',
   lighting: 'ltLevel3',
   music: 'level3',
+  assets: function () {
+    return [];
+  },
   nextState: function () { return showcases[0].init(); },
   walls: [
     [0,2895,1200,200],

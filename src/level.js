@@ -3,6 +3,24 @@ var levels = [];
 function Level(data) {
 	this.data = data;
 }
+Level.prototype.init = function () {
+  var assets = [
+    IMAGE[this.data.background],
+    IMAGE[this.data.foreground],
+    IMAGE[this.data.lighting],
+    MUSIC[this.data.music]
+  ].concat(
+    this.data.assets(),
+    Protagonist.assets(),
+    Cutscene.assets(),
+  );
+  var init = Game.loader.require(assets);
+  var thisLevel = this;
+  init.onComplete = function () { 
+    Game.setState(thisLevel); 
+  };
+  return init;
+};
 Level.prototype.onEnter = function () {  
   this.background = IMAGE[this.data.background].get();
   this.foreground = IMAGE[this.data.foreground].get();
@@ -270,7 +288,7 @@ BigLeaf.prototype.step = function (elapsed) {
   var targetY = this.baseY;
   
   
-  if (held) { targetY = Game.ui.protagonist.y + Game.ui.protagonist.mask.bottom - this.mask.top; }
+  if (held) { targetY = this.baseY + 20; }
   this.vSpeed += (targetY - this.y) * this.elasticity;
   
   this.y += this.vSpeed;
@@ -294,15 +312,17 @@ BigLeaf.prototype.draw = function (ctx, camera) {
     0, 0, this.image.width, this.image.height, 
     tx, ty, tw, th);
     
-  // tx = (Math.floor(this.x - camera.x) + this.mask.left) / camera.w * Game.WIDTH;
-  // ty = (Math.floor(this.y - camera.y) + this.mask.top) / camera.h * Game.HEIGHT;
-    
-  // ctx.beginPath();
-  // ctx.strokeStyle = 'white';
-  // ctx.fillStyle = 'white';
-  // ctx.rect(tx, ty, (this.mask.right - this.mask.left) / camera.w * Game.WIDTH, (this.mask.bottom - this.mask.top) / camera.h * Game.HEIGHT);
-  // ctx.stroke();
-  // ctx.globalAlpha = 0.2;
-  // ctx.fill();
-  // ctx.globalAlpha = 1;
+  if (Game.DEBUG) {
+    tx = (Math.floor(this.x - camera.x) + this.mask.left) / camera.w * Game.WIDTH;
+    ty = (Math.floor(this.y - camera.y) + this.mask.top) / camera.h * Game.HEIGHT;
+      
+    ctx.beginPath();
+    ctx.strokeStyle = 'white';
+    ctx.fillStyle = 'white';
+    ctx.rect(tx, ty, (this.mask.right - this.mask.left) / camera.w * Game.WIDTH, (this.mask.bottom - this.mask.top) / camera.h * Game.HEIGHT);
+    ctx.stroke();
+    ctx.globalAlpha = 0.2;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
 }

@@ -5,7 +5,14 @@ levels[0] = new Level({
   foreground: 'fgLevel1',
   lighting: 'ltLevel1',
   music: 'level1',
-  nextState: function () { return levels[1]; },
+  assets: function () {
+    return [
+      IMAGE.leaf1Level1,
+      IMAGE.leaf2Level1,
+      IMAGE.squirrel,
+    ];
+  },
+  nextState: function () { return levels[1].init(); },
   walls: [
     [880,1800,100,100],
     [860,1820,400,100],

@@ -5,7 +5,10 @@ levels[3] = new Level({
   foreground: 'fgLevel4',
   lighting: 'ltLevel4',
   music: 'level4',
-  nextState: function () { return showcases[0].init(); },
+  assets: function () {
+    return [];
+  },
+  nextState: function () { return Ending.init(); },
   walls: [
     [900,2880,400,200],
     [0,2800,100,200],

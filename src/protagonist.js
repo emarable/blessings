@@ -43,6 +43,34 @@ function Protagonist() {
   this.animFrame = 0;
   this.animSpeed = 0.1;
 }
+Protagonist.assets = function () {
+  return [
+    IMAGE.protagonistIdle1Left,
+    IMAGE.protagonistIdle2Left,
+    IMAGE.protagonistIdle3Left,
+    IMAGE.protagonistIdle1Right,
+    IMAGE.protagonistIdle2Right,
+    IMAGE.protagonistIdle3Right,
+    IMAGE.protagonistMove1Left,
+    IMAGE.protagonistMove2Left,
+    IMAGE.protagonistMove3Left,
+    IMAGE.protagonistMove4Left,
+    IMAGE.protagonistMove1Right,
+    IMAGE.protagonistMove2Right,
+    IMAGE.protagonistMove3Right,
+    IMAGE.protagonistMove4Right,
+    IMAGE.protagonistRise1Left,
+    IMAGE.protagonistRise2Left,
+    IMAGE.protagonistRise1Right,
+    IMAGE.protagonistRise2Right,
+    IMAGE.protagonistFall1Left,
+    IMAGE.protagonistFall2Left,
+    IMAGE.protagonistFall1Right,
+    IMAGE.protagonistFall2Right,
+    SOUND.water,
+    SOUND.landing,
+  ];
+};
 Protagonist.prototype.step = function (elapsed) {
   if (this.active) {
     this.animFrame += this.animSpeed;
@@ -222,15 +250,6 @@ Protagonist.prototype.step = function (elapsed) {
   }
 }
 Protagonist.prototype.draw = function (ctx, camera) {
-	
-  // ctx.beginPath();
-  // if (this.water) {
-    // ctx.fillStyle = 'blue';
-  // } else {
-    // ctx.fillStyle = 'black';
-  // }
-  // ctx.rect(tx, ty, (this.mask.right - this.mask.left) / camera.w * Game.WIDTH, (this.mask.bottom - this.mask.top) / camera.h * Game.HEIGHT);
-  // ctx.fill();
   if (this.facing === 1) {
     var frame = IMAGE.protagonistIdle1Right.get();
     if (!this.isOnGround) {

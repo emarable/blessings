@@ -48,61 +48,8 @@ var MainMenu = {
 		if (this.buttonStart.hover) {
       SOUND.play(SOUND.start.get());
       
-      var init = Game.loader.require(
-        IMAGE.bgLevel1,
-        IMAGE.fgLevel1,
-        IMAGE.ltLevel1,
-        IMAGE.leaf1Level1,
-        IMAGE.leaf2Level1,
-        IMAGE.bgLevel2,
-        IMAGE.fgLevel2,
-        IMAGE.ltLevel2,
-        IMAGE.bgLevel3,
-        IMAGE.fgLevel3,
-        IMAGE.ltLevel3,
-        IMAGE.bgLevel4,
-        IMAGE.fgLevel4,
-        IMAGE.ltLevel4,
-        IMAGE.squirrel,
-        IMAGE.speech,
-        IMAGE.protagonistIdle1Left,
-        IMAGE.protagonistIdle2Left,
-        IMAGE.protagonistIdle3Left,
-        IMAGE.protagonistIdle1Right,
-        IMAGE.protagonistIdle2Right,
-        IMAGE.protagonistIdle3Right,
-        IMAGE.protagonistMove1Left,
-        IMAGE.protagonistMove2Left,
-        IMAGE.protagonistMove3Left,
-        IMAGE.protagonistMove4Left,
-        IMAGE.protagonistMove1Right,
-        IMAGE.protagonistMove2Right,
-        IMAGE.protagonistMove3Right,
-        IMAGE.protagonistMove4Right,
-        IMAGE.protagonistRise1Left,
-        IMAGE.protagonistRise2Left,
-        IMAGE.protagonistRise1Right,
-        IMAGE.protagonistRise2Right,
-        IMAGE.protagonistFall1Left,
-        IMAGE.protagonistFall2Left,
-        IMAGE.protagonistFall1Right,
-        IMAGE.protagonistFall2Right,
-        MUSIC.level1,
-        MUSIC.level2,
-        MUSIC.level4,
-        MUSIC.ending,
-        SOUND.water,
-        SOUND.landing,
-        SOUND.dialogue,
-      );
-      init.onComplete = function () { 
-        Game.currentLevel = 3;
-        Game.setState(levels[Game.currentLevel]); 
-        // Game.setState(showcases[1].init());
-        // Game.setState(Ending.init());
-      };
-      
-      this.nextState = init;
+      Game.currentLevel = 0;
+      this.nextState = levels[Game.currentLevel].init();
       this.fadeOut = true;
 		} 
 	}

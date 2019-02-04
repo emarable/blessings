@@ -38,6 +38,12 @@ function Cutscene(data) {
   this.textBounce = 2;
   this.shadow = 2;
 }
+Cutscene.assets = function () {
+  return [
+    IMAGE.speech,
+    SOUND.dialogue,
+  ];
+};
 Cutscene.prototype.step = function (elapsed) {
   this.scroll += 1;
 };

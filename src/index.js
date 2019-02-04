@@ -88,6 +88,8 @@ window.onresize = updateViewport;
 var Game = {
 	WIDTH: 640,
 	HEIGHT: 480,
+  
+  DEBUG: true,
 	
 	difficulty: 0,
 	currentMission: 0,

@@ -302,21 +302,23 @@ Protagonist.prototype.draw = function (ctx, camera) {
   ctx.drawImage(frame, 
     0, 0, frame.width, frame.height, 
     tx, ty, tw, th);
-   
-    //Comments here
-   tx = (Math.floor(this.x - camera.x) + this.mask.left) / camera.w * Game.WIDTH;
-   ty = (Math.floor(this.y - camera.y) + this.mask.top) / camera.h * Game.HEIGHT;
-   ctx.beginPath();
-   ctx.strokeStyle = 'red';
-   ctx.fillStyle = 'red';
-   ctx.rect(tx, ty, (this.mask.right - this.mask.left) / camera.w * Game.WIDTH, (this.mask.bottom - this.mask.top) / camera.h * Game.HEIGHT);
-   ctx.stroke();
-   ctx.globalAlpha = 0.2;
-   ctx.fill();
-   ctx.globalAlpha = 1;
-    
-   ctx.fillStyle = "black";
-	 ctx.fillText('('+this.x+','+this.y+')', tx, ty - 16);
+ 
+  //Comments here
+  if (Game.DEBUG) {
+    tx = (Math.floor(this.x - camera.x) + this.mask.left) / camera.w * Game.WIDTH;
+    ty = (Math.floor(this.y - camera.y) + this.mask.top) / camera.h * Game.HEIGHT;
+    ctx.beginPath();
+    ctx.strokeStyle = 'red';
+    ctx.fillStyle = 'red';
+    ctx.rect(tx, ty, (this.mask.right - this.mask.left) / camera.w * Game.WIDTH, (this.mask.bottom - this.mask.top) / camera.h * Game.HEIGHT);
+    ctx.stroke();
+    ctx.globalAlpha = 0.2;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = "black";
+    ctx.fillText('('+this.x+','+this.y+')', tx, ty - 16);
+  }
 }
 Protagonist.prototype.keydown = function (ev) {
 	switch(ev.keyCode) {

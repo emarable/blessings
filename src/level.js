@@ -1,10 +1,31 @@
+var levels = [];
+
 function Level(data) {
 	this.data = data;
 }
+Level.prototype.init = function () {
+  var assets = [
+    IMAGE[this.data.background],
+    IMAGE[this.data.foreground],
+    IMAGE[this.data.lighting],
+    MUSIC[this.data.music]
+  ].concat(
+    this.data.assets(),
+    Protagonist.assets(),
+    Cutscene.assets(),
+  );
+  var init = Game.loader.require(assets);
+  var thisLevel = this;
+  init.onComplete = function () { 
+    Game.setState(thisLevel); 
+  };
+  return init;
+};
 Level.prototype.onEnter = function () {  
   this.background = IMAGE[this.data.background].get();
   this.foreground = IMAGE[this.data.foreground].get();
   this.lighting = IMAGE[this.data.lighting].get();
+  this.music = MUSIC[this.data.music].get();
   
   this.camera = {
     x: 0,
@@ -13,9 +34,9 @@ Level.prototype.onEnter = function () {
     h: 800 / ASPECT_RATIO,
   };
      
-  if (!MUSIC.level1.get().isPlaying) {
+  if (!this.music.isPlaying) {
     MUSIC.stopAll();
-    MUSIC.play(MUSIC.level1.get());
+    MUSIC.play(this.music);
   }
   
 	this.protagonist = new Protagonist();
@@ -116,14 +137,16 @@ Level.prototype.draw = function (ctx) {
     0, 0, Game.WIDTH, Game.HEIGHT);
   ctx.globalCompositeOperation = 'source-over';
   
-  var camera = this.camera;
-  // this.walls.concat(this.platforms)
-    // .concat(this.waters)
-    // .concat(this.climbs)
-    // .concat(this.cutscenes)
-    // .forEach(function (w) {
-      // w.draw(ctx,camera);
-    // });
+  if (Game.DEBUG) {
+    var camera = this.camera;
+    this.walls.concat(this.platforms)
+      .concat(this.waters)
+      .concat(this.climbs)
+      .concat(this.cutscenes)
+      .forEach(function (w) {
+        w.draw(ctx,camera);
+      });
+  }
     
   if (this.activeCutscene) {
     this.activeCutscene.draw(ctx, camera);
@@ -192,64 +215,6 @@ Level.prototype.endCutscene = function () {
   this.activeCutscene = null;
   this.protagonist.control = true;
 };
-
-var levels = [];
-levels[0] = new Level({
-  width: 1200,
-  height: 2000,
-  background: 'bgLevel1',
-  foreground: 'fgLevel1',
-  lighting: 'ltLevel1',
-  music: 'level1',
-  nextState: function () { return showcases[0].init(); },
-  walls: [
-    [880,1800,100,100],
-    [860,1820,400,100],
-    [0,1880,520,100],
-  ],
-  platforms: [
-    [940,1600,100,10],
-    [590,1640,60,10],
-    [550,1600,60,10],
-    [480,1570,100,10],
-    [470,1460,80,10],
-    // L2
-    [0,1300,500,10],
-    [800,1340,500,10],
-    // Rock
-    [140,1160,140,10],
-    [80,1080,80,10],
-    [30,990,60,10],
-    // Big leaf 1
-    [350,730,220,10],
-    // Leaves
-    [280,520,130,10],
-    [380,290,150,10],
-    [140,120,150,10],
-    // Big leaf 2
-    [640,560,160,10],
-    [790,400,160,10],
-  ],
-  waters: [
-    [0,1910,1200,90],
-  ],
-  climbs: [
-    [750,1480,20,300],
-    [110,800,50,50],
-  ],
-  dynamic: [
-    [BigLeaf,'leaf1Level1',250,700,100,10,220,40],
-    [BigLeaf,'leaf2Level1',578,305,62,235,160,40],
-  ],
-  doodads: [
-    ['squirrel',240,1600,0.3],
-  ],
-  cutscenes: [
-    [200,1600,10, 300, {cutscene: 0}],
-  ],
-  protagonist: [100,1800],
-  //protagonist: [440,200],
-});
 
 function StaticBox(data) {
   this.x = data[0];
@@ -323,7 +288,7 @@ BigLeaf.prototype.step = function (elapsed) {
   var targetY = this.baseY;
   
   
-  if (held) { targetY = Game.ui.protagonist.y + Game.ui.protagonist.mask.bottom - this.mask.top; }
+  if (held) { targetY = this.baseY + 20; }
   this.vSpeed += (targetY - this.y) * this.elasticity;
   
   this.y += this.vSpeed;
@@ -347,15 +312,17 @@ BigLeaf.prototype.draw = function (ctx, camera) {
     0, 0, this.image.width, this.image.height, 
     tx, ty, tw, th);
     
-  // tx = (Math.floor(this.x - camera.x) + this.mask.left) / camera.w * Game.WIDTH;
-  // ty = (Math.floor(this.y - camera.y) + this.mask.top) / camera.h * Game.HEIGHT;
-    
-  // ctx.beginPath();
-  // ctx.strokeStyle = 'white';
-  // ctx.fillStyle = 'white';
-  // ctx.rect(tx, ty, (this.mask.right - this.mask.left) / camera.w * Game.WIDTH, (this.mask.bottom - this.mask.top) / camera.h * Game.HEIGHT);
-  // ctx.stroke();
-  // ctx.globalAlpha = 0.2;
-  // ctx.fill();
-  // ctx.globalAlpha = 1;
+  if (Game.DEBUG) {
+    tx = (Math.floor(this.x - camera.x) + this.mask.left) / camera.w * Game.WIDTH;
+    ty = (Math.floor(this.y - camera.y) + this.mask.top) / camera.h * Game.HEIGHT;
+      
+    ctx.beginPath();
+    ctx.strokeStyle = 'white';
+    ctx.fillStyle = 'white';
+    ctx.rect(tx, ty, (this.mask.right - this.mask.left) / camera.w * Game.WIDTH, (this.mask.bottom - this.mask.top) / camera.h * Game.HEIGHT);
+    ctx.stroke();
+    ctx.globalAlpha = 0.2;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
 }

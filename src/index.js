@@ -88,6 +88,8 @@ window.onresize = updateViewport;
 var Game = {
 	WIDTH: 640,
 	HEIGHT: 480,
+  
+  DEBUG: true,
 	
 	difficulty: 0,
 	currentMission: 0,
@@ -121,10 +123,19 @@ var Game = {
     IMAGE.squirrel = loadSprite('assets/Squirrel.png');
     IMAGE.ocelot = loadSprite('assets/ocelot.png');
     IMAGE.speech = loadSprite('assets/Speech.png');
-    
-    IMAGE.bgLevel2 = loadSprite('assets/level2/COMPOSITE.jpg');
-    IMAGE.bgLevel3 = loadSprite('assets/level3/COMPOSITE.jpg');
-    IMAGE.bgLevel4 = loadSprite('assets/level4/COMPOSITE.jpg');
+
+    IMAGE.bgLevel2 = loadSprite('assets/level2/MAIN.jpg');
+    IMAGE.fgLevel2 = loadSprite('assets/level2/FORE.png');
+    IMAGE.ltLevel2 = loadSprite('assets/level2/LIGHTING.png');
+      
+
+    IMAGE.bgLevel3 = loadSprite('assets/level3/MAIN.jpg');
+    IMAGE.fgLevel3 = loadSprite('assets/level3/FORE.png');
+    IMAGE.ltLevel3 = loadSprite('assets/level3/LIGHTING.png');
+
+    IMAGE.bgLevel4 = loadSprite('assets/level4/MAIN.jpg');
+    IMAGE.fgLevel4 = loadSprite('assets/level4/FORE.png');
+    IMAGE.ltLevel4 = loadSprite('assets/level4/LIGHTING.png');
     IMAGE.bgEnding = loadSprite('assets/FIN.jpg');
     IMAGE.bgCredits = loadSprite('assets/Credits1.jpg');
     

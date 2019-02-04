@@ -126,7 +126,7 @@ showcases[1] = new Showcase({
     init.onComplete = function () { Game.setState(showcases[1]); };
     return init;
   },
-  nextState: function () { return showcases[2].init(); }
+  nextState: function () { return levels[3].init(); }
 });
 showcases[2] = new Showcase({
   width: 1200,

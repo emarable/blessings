@@ -37,6 +37,8 @@ function Cutscene(data) {
   this.textFade = 60;
   this.textBounce = 2;
   this.shadow = 2;
+  
+  this.skip = false;
 }
 Cutscene.assets = function () {
   return [
@@ -96,16 +98,23 @@ Cutscene.prototype.draw = function (ctx, camera) {
   ctx.globalAlpha = 1;
 };
 Cutscene.prototype.keydown = function (ev) {
+  this.skip = true;
 };
 Cutscene.prototype.keyup = function (elapsed) {
-  var text = this.data.texts[this.currentText];
-  if (this.scroll >= text.length * this.textSpeed + this.textFade) {
-    SOUND.play(SOUND.dialogue.get());
-    this.currentText += 1;
-    this.scroll = 0;
-    if (this.data.texts.length <= this.currentText) {
-      Game.ui.endCutscene();
-    } 
+  if (this.skip) {
+    var text = this.data.texts[this.currentText];
+    if (this.scroll >= text.length * this.textSpeed + this.textFade) {
+      SOUND.play(SOUND.dialogue.get());
+      this.currentText += 1;
+      this.scroll = 0;
+      if (this.data.texts.length <= this.currentText) {
+        Game.ui.endCutscene();
+      } 
+    } else {
+      SOUND.play(SOUND.dialogue.get());
+      this.scroll = text.length * this.textSpeed + this.textFade;
+    }
+    this.skip = false;
   }
 };
 

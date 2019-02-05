@@ -89,7 +89,8 @@ var Game = {
 	WIDTH: 640,
 	HEIGHT: 480,
   
-  DEBUG: true,
+  DEBUG: false,
+  heldKeys: {},
 	
 	difficulty: 0,
 	currentMission: 0,
@@ -196,8 +197,16 @@ var Game = {
 		mainCanvas.addEventListener('mousemove',function (ev) { that.mousemove(ev); });
 		mainCanvas.addEventListener('mousedown',function (ev) { that.mousedown(ev); });
 		mainCanvas.addEventListener('mouseup',function (ev) { that.mouseup(ev); });
-		document.addEventListener('keydown',function (ev) { that.keydown(ev); });
-		document.addEventListener('keyup',function (ev) { that.keyup(ev); });
+		document.addEventListener('keydown',function (ev) { 
+      if (!Game.heldKeys[ev.code]) {
+        that.keydown(ev); 
+        Game.heldKeys[ev.code] = true;
+      }
+    });
+		document.addEventListener('keyup',function (ev) { 
+      that.keyup(ev); 
+      Game.heldKeys[ev.code] = false;
+    });
     
     updateViewport();
 	

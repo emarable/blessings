@@ -89,7 +89,7 @@ var Game = {
 	WIDTH: 640,
 	HEIGHT: 480,
   
-  DEBUG: true,
+  DEBUG: false,
   heldKeys: {},
 	
 	difficulty: 0,
